@@ -1,22 +1,17 @@
-# cli-lib
-Command Line Interface library, for developing CLI applications and games in C. It has functions to access keyboard, screen and manage timing tasks.
+# C_game
+Jogo desenvolvido na matéria de pif em C
 
-## Requirements
-- This library works with the follwing OS:
-   - Linux based (Ubuntu, etc)
-   - MacOS
-- It is necessary to have GCC installed.
+## Estrutura do projeto
 
-## Usage 
-The file `main.c` has an example of how to use the Keyboard, Screen nd Timer functions. 
-
-To build this example via command line, just switch to library root directory and type the following command:
 ```
-$ gcc ./src/*.c -I./include -o cli-lib-example
+/projeto
+├── src/            # Código-fonte (.c)
+├── include/     	# Cabeçalhos (.h)
+├── build/       	# Saídas de compilação
+├── README.md    	# Descrição do projeto
+├── Makefile     	# Arquivo de build
+└── LICENSE      	# Licença
 ```
-
-To use this library to create your own apps, simply add source and header files to your project and compile it together with your own code, 
-replacing the main.c file to your own.
 
 ## Grupo
 - Marcello Augusto
