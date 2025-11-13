@@ -1,4 +1,4 @@
-# C_game
+# Logic_fighters in C
 Jogo desenvolvido na matéria de pif em C
 
 ## Estrutura do projeto
