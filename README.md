@@ -14,9 +14,13 @@ Jogo desenvolvido na matéria de pif em C
 ```
 
 ## Grupo
-- Marcello Augusto
-- Eliziane Mota
-- Maria Luiza
-- Luan Guedes
-- Laiza Freitas
-- Lucca Spinelli
+- Marcello Augusto - @MGT-21
+- Eliziane Mota - @ElizianeMota
+- Maria Luiza - @vbluuiza
+- Luan Guedes - @RyuuNoTenshi
+- Laiza Freitas - @laizafafreitas
+- Lucca Spinelli - @LuccaSpinelli
+
+## Disciplina
+Programação Imperativa e Funcional - 2025.2. | CESAR School
+
