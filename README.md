@@ -13,6 +13,10 @@ Jogo desenvolvido na matéria de pif em C
 └── LICENSE      	# Licença
 ```
 
+## Trello do projeto:
+
+<a href="https://trello.com/invite/b/69154931cc6d47d05b043b7d/ATTI071937ecc9ce459194b39c0acfb8038866A2A8C7/kanban-jogo-em-c">Nosso Trello</a>
+
 ## Grupo
 - Marcello Augusto - @MGT-21
 - Eliziane Mota - @ElizianeMota
