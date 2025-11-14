@@ -17,6 +17,20 @@ Jogo desenvolvido na matéria de pif em C
 
 <a href="https://trello.com/invite/b/69154931cc6d47d05b043b7d/ATTI071937ecc9ce459194b39c0acfb8038866A2A8C7/kanban-jogo-em-c">Nosso Trello</a>
 
+## Rodando o projeto
+
+### Primeiro compile o programa:
+
+```
+gcc logic_fighters.c src/screen.c src/keyboard.c src/timer.c -Iinclude -o logic_fighters
+```
+### Depois execute o programa:
+
+```
+./logic_fighters
+```
+
+
 ## Grupo
 - Marcello Augusto - @MGT-21
 - Eliziane Mota - @ElizianeMota
