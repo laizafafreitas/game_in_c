@@ -22,12 +22,18 @@ Jogo desenvolvido na matéria de pif em C
 ### Primeiro compile o programa:
 
 ```
-gcc logic_fighters.c src/screen.c src/keyboard.c src/timer.c -Iinclude -o logic_fighters
+make
 ```
 ### Depois execute o programa:
 
 ```
-./logic_fighters
+make run
+```
+
+### (Opicional) Limpe arquivos gerados:
+
+```
+make clean
 ```
 
 
