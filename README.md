@@ -1,5 +1,8 @@
 # Logic_fighters in C
-Jogo desenvolvido na matéria de pif em C
+
+Logic Fighters é um jogo de luta em ambiente de terminal desenvolvido em linguagem C, utilizando a biblioteca CLI-Lib para controlar a tela, o teclado e o tempo de atualização.
+
+O jogo implementa um game loop clássico composto por entrada, atualização e renderização, simulando uma luta entre o jogador e um adversário controlado pela CPU (bot).
 
 ## Estrutura do projeto
 
