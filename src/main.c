@@ -7,11 +7,10 @@
 
 #include "fighters.h"
 #include "render.h"
+#include "utils.h"
 #define FPS 30
 
-int clamp(int v, int a, int b) {
-    return v < a ? a : (v > b ? b : v);
-}
+
 
 int main(void) {
     srand((unsigned) time(NULL));
