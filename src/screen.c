@@ -85,3 +85,13 @@ void screenSetColor( screenColor fg, screenColor bg)
 
     printf("%s%s%d;%dm", ESC, atr, fg+30, bg+40);
 }
+
+void clearGameArea(void) {
+    // limpa apenas a área interna, preservando bordas
+    for (int i = MINX + 1; i < MAXX -1; i++) {
+        for (int j = MINY + 1; j < MAXY; j++) {
+            screenGotoxy(i, j);
+            printf(" ");
+        }
+    }
+}

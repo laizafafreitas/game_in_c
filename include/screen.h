@@ -95,6 +95,11 @@ static inline void screenClear()
     printf("%s%s", ESC, CLEARSCREEN);
 }
 
+/** 
+ * Clear the screen just inside the edges
+*/
+void clearGameArea(void);
+
 /**
  * Update screen imediatelly 
 */
