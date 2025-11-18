@@ -9,49 +9,9 @@
 #include "render.h"
 #define FPS 30
 
-/* ================== UTILITÁRIOS ================== */
-
 int clamp(int v, int a, int b) {
     return v < a ? a : (v > b ? b : v);
 }
-
-void drawGame(const Fighter *player, const Fighter *cpu) {
-    clearGameArea();
-    drawHUD(player, cpu);
-
-    // y dos lutadores (linha "do chão")
-    int fighterY = SCRENDY - 2;
-
-    drawFighter(player, fighterY, 1);
-    drawFighter(cpu,    fighterY, 0);
-
-    screenUpdate();
-}
-
-/* ================== TELA FINAL ================== */
-
-void drawEndScreen(const Fighter *player, const Fighter *cpu) {
-    clearGameArea();
-
-    screenGotoxy(MAXX / 2 - 6, MAXY / 2);
-    if (player->hp > 0 && cpu->hp <= 0) {
-        printf("VOCE VENCEU!");
-    } else if (cpu->hp > 0 && player->hp <= 0) {
-        printf("VOCE PERDEU!");
-    } else {
-        printf("EMPATE!");
-    }
-
-    screenGotoxy(MAXX / 2 - 12, MAXY / 2 + 2);
-    printf("Pressione qualquer tecla...");
-
-    screenUpdate();
-
-    while (!keyhit()) { /* espera */ }
-    (void)readch();
-}
-
-/* ================== MAIN / GAME LOOP ================== */
 
 int main(void) {
     srand((unsigned) time(NULL));
