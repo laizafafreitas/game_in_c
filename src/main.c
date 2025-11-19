@@ -1,16 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
 
-#include "fighters.h"
-#include "render.h"
-#include "utils.h"
+#include "game.h"      
+
 #define FPS 30
-
-
 
 int main(void) {
     srand((unsigned) time(NULL));
@@ -19,40 +17,12 @@ int main(void) {
     keyboardInit();
     timerInit(1000 / FPS);
 
-    Fighter player;
-    Fighter cpu;
+    // aqui você chama a tela de luta
+    runFight();
 
-    initFighter(&player, SCRSTARTX + 5,  1);
-    initFighter(&cpu,    SCRENDX   - 5, -1);
-
-    int running = 1;
-
-    while (running) {
-        // INPUT
-        handlePlayerInput(&running, &player);
-
-        // limita posição do player dentro da arena
-        player.x = clamp(player.x, SCRSTARTX + 1, SCRENDX - 1);
-
-        // UPDATE (somente em tick de timer)
-        if (timerTimeOver()) {
-            updateCPU(&cpu, &player);
-
-            // ataques (aplicam dano e atualizam timers)
-            updateAttack(&player, &cpu);
-            updateAttack(&cpu,    &player);
-
-            // verifica fim de jogo
-            if (player.hp <= 0 || cpu.hp <= 0) {
-                running = 0;
-            }
-
-            // DRAW
-            drawGame(&player, &cpu);
-        }
-    }
-
-    drawEndScreen(&player, &cpu);
+    // outras telas:
+    // runMenu();
+    // runTutorial();
 
     keyboardDestroy();
     screenDestroy();
