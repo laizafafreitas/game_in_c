@@ -1,5 +1,6 @@
-#include "game.h"
+#include <time.h>
 
+#include "game.h"
 #include "screen.h"
 #include "timer.h"
 #include "fighters.h"
@@ -15,6 +16,9 @@ void runFight(void) {
 
     int running = 1;
 
+    int timeLeft = 70;
+    time_t startTime = time(NULL);
+
     while (running) {
         // INPUT
         handlePlayerInput(&running, &player);
@@ -24,6 +28,11 @@ void runFight(void) {
 
         // UPDATE (somente em tick de timer)
         if (timerTimeOver()) {
+            
+            time_t now = time(NULL);
+            int elapsed = (int)(now - startTime);
+            timeLeft = 70 - elapsed;
+            
             updateCPU(&cpu, &player);
 
             // ataques (aplicam dano e atualizam timers)
@@ -31,12 +40,12 @@ void runFight(void) {
             updateAttack(&cpu,    &player);
 
             // verifica fim de jogo
-            if (player.hp <= 0 || cpu.hp <= 0) {
+            if (player.hp <= 0 || cpu.hp <= 0 || timeLeft <= 0) {
                 running = 0;
             }
 
             // DRAW
-            drawGame(&player, &cpu);
+            drawGame(&player, &cpu, timeLeft);
         }
     }
 
