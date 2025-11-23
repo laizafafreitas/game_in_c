@@ -2,6 +2,68 @@
 #include "fighters.h"
 #include "keyboard.h"
 
+static const char *PLAYER_IDLE_LEFT[3] = {
+    " O  ",
+    "/|>",
+    "/ \\"
+};
+
+// Player parado (virado pra esquerda)
+static const char *PLAYER_IDLE_RIGHT[3] = {
+    " O  ",
+    "<|\\",
+    "/ \\"
+};
+
+// Player atacando para a direita
+static const char *PLAYER_ATTACK_RIGHT[3] = {
+    " O ",
+    "<|‾‾",
+    "/ \\"
+};
+
+// Player atacando para a esquerda
+static const char *PLAYER_ATTACK_LEFT[3] = {
+    "  O ",
+    "‾‾|>",
+    " / \\"
+};
+
+// Bot parado (virado pra direita)
+static const char *BOT_IDLE_RIGHT[3] = {
+    " @  ",
+    "<|\\",
+    "/ \\"
+};
+
+// Bot parado (virado pra esquerda)
+static const char *BOT_IDLE_LEFT[3] = {
+    " @  ",
+    "/|>",
+    "/ \\"
+};
+
+// Bot atacando para a direita
+static const char *BOT_ATTACK_LEFT[3] = {
+    "  @ ",
+    "‾‾|>",
+    " / \\"
+};
+
+// Bot atacando para a esquerda
+static const char *BOT_ATTACK_RIGHT[3] = {
+    " @  ",
+    "<|‾‾",
+    "/ \\ "
+};
+
+static void drawSprite(int x, int topY, const char *sprite[3]) {
+    for (int i = 0; i < 3; i++) {
+        screenGotoxy(x, topY + i);
+        printf("%s", sprite[i]);
+    }
+}
+
 void drawFloor(void) {
     screenGotoxy(SCRSTARTX - 1, SCRENDY - 1);
     for (int i = 0; i < MAXX - 3; i++) {
@@ -29,20 +91,25 @@ void drawTimer(int x, int y, int timeLeft) {
     printf("TIME: %02d", timeLeft);  // imprime como 70, 08, 07, etc
 }
 
-void drawFighter(const Fighter *f, int y, int isPlayer) {
-    screenGotoxy(f->x, y);
+void drawFighter(const Fighter *f, int topY, int isPlayer) {
+    const char **sprite = NULL;
+    int facingRight = (f->facing == 1);
 
     if (f->attacking) {
-        if (f->facing == 1) {
-            // direita
-            printf(isPlayer ? "O-<" : "O-<");
+        if (isPlayer) {
+            sprite = facingRight ? PLAYER_ATTACK_RIGHT : PLAYER_ATTACK_LEFT;
         } else {
-            // esquerda
-            printf(isPlayer ? ">-O" : ">-O");
+            sprite = facingRight ? BOT_ATTACK_RIGHT : BOT_ATTACK_LEFT;
         }
     } else {
-        printf(" O ");
+        if (isPlayer) {
+            sprite = facingRight ? PLAYER_IDLE_RIGHT : PLAYER_IDLE_LEFT;
+        } else {
+            sprite = facingRight ? BOT_IDLE_RIGHT : BOT_IDLE_LEFT;
+        }
     }
+
+    drawSprite(f->x, topY, sprite);
 }
 
 void drawHUD(const Fighter *player, const Fighter *cpu, int timeLeft) {
@@ -64,10 +131,13 @@ void drawGame(const Fighter *player, const Fighter *cpu, int timeLeft) {
     drawHUD(player, cpu, timeLeft);
 
     // y dos lutadores (linha "do chão")
-    int fighterY = SCRENDY - 2;
+    int floorY = SCRENDY - 1;
+    
+    // topo do sprite (5 linhas de altura → sobe 4)
+    int fighterTopY = floorY - 3;
 
-    drawFighter(player, fighterY, 1);
-    drawFighter(cpu,    fighterY, 0);
+    drawFighter(player, fighterTopY, 1);
+    drawFighter(cpu,    fighterTopY, 0);
 
     screenUpdate();
 }

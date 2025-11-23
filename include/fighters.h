@@ -4,9 +4,9 @@
 #include <stdlib.h>
 
 #define MAX_HP          100
-#define ATTACK_RANGE    2
+#define ATTACK_RANGE    4
 #define DAMAGE          10
-#define MIN_DISTANCE    2
+#define MIN_DISTANCE    4
 #define ATTACK_DURATION 6
 
 typedef struct {
