@@ -6,7 +6,8 @@
 #include "keyboard.h"
 #include "timer.h"
 
-#include "game.h"      
+#include "game.h"
+#include "menu.h"      
 
 #define FPS 30
 
@@ -17,12 +18,12 @@ int main(void) {
     keyboardInit();
     timerInit(1000 / FPS);
 
-    // aqui você chama a tela de luta
-    runFight();
+    int choice = runMenu();
+    clearGameArea();
 
-    // outras telas:
-    // runMenu();
-    // runTutorial();
+    if (choice != 0) {
+        runFight();
+    }
 
     keyboardDestroy();
     screenDestroy();
