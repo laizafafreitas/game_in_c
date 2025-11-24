@@ -1,6 +1,6 @@
-#include "screen.h"
+#include "lib/screen.h"
 #include "fighters.h"
-#include "keyboard.h"
+#include "lib/keyboard.h"
 
 static const char *PLAYER_IDLE_LEFT[3] = {
     " O  ",

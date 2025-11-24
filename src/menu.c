@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "screen.h"
-#include "keyboard.h"
+#include "lib/screen.h"
+#include "lib/keyboard.h"
 
 int runMenu(void)
 {

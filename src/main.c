@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "screen.h"
-#include "keyboard.h"
-#include "timer.h"
+#include "lib/screen.h"
+#include "lib/keyboard.h"
+#include "lib/timer.h"
 
 #include "game.h"
 #include "menu.h"      

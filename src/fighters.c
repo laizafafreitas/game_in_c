@@ -1,5 +1,5 @@
 #include "fighters.h"
-#include "keyboard.h" // keyhit, readch
+#include "lib/keyboard.h" // keyhit, readch
 
 void initFighter(Fighter *f, int startX, int facing) {
     f->x            = startX;

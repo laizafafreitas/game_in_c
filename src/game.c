@@ -1,8 +1,8 @@
 #include <time.h>
 
 #include "game.h"
-#include "screen.h"
-#include "timer.h"
+#include "lib/screen.h"
+#include "lib/timer.h"
 #include "fighters.h"
 #include "render.h"
 #include "utils.h"
