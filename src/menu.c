@@ -6,27 +6,32 @@ int runMenu(void)
 {
     int option = -1;
 
-    clearGameArea();  // limpa só a área dentro das bordas
-    screenSetColor(GREEN, BLACK);
+    clearGameArea();
+    screenSetColor(CYAN, LIGHTCYAN);
 
-    screenGotoxy(30, 3);
-    printf("==== Logic Fighters ====");
+    screenGotoxy(24, 3);
+    screenSetBold();
+    printf("╔══════════════════════════════╗");
+    screenGotoxy(24, 4);
+    printf("║        LOGIC FIGHTERS        ║");
+    screenGotoxy(24, 5);
+    printf("╚══════════════════════════════╝");
+    screenSetNormal();
 
-    screenSetColor(WHITE, BLACK);
+    screenSetColor(WHITE, LIGHTCYAN); 
     screenGotoxy(32, 7);
-    printf("[ 1 ] Vs Bot");
+    printf("[ 1 ] Vs Bot"); 
+    screenGotoxy(32, 9); 
+    printf("[ 2 ] Vs Player"); 
+    screenGotoxy(32, 11); 
+    printf("[ 3 ] Tutorial "); 
+    screenGotoxy(32, 14); 
+    printf("[ 0 ] Sair"); 
 
-    screenGotoxy(32, 9);
-    printf("[ 2 ] Vs Player");
-
-    screenGotoxy(32, 11);
-    printf("[ 0 ] Sair");
-
-    screenSetColor(GREEN, BLACK);
-    screenGotoxy(32, 15);
-    printf("key code: ");
-
-    screenUpdate();   // <<< IMPORTANTE !!! Mostra tudo na tela AGORA
+    screenSetColor(LIGHTGREEN, LIGHTCYAN);
+    screenGotoxy(31, 17);
+    printf("Escolha uma opção: ");
+    screenUpdate();
 
     while (option == -1)
     {
@@ -38,6 +43,7 @@ int runMenu(void)
             {
                 case '1': option = 1; break;
                 case '2': option = 2; break;
+                case '3': option = 3; break;
                 case '0': option = 0; break;
             }
         }
