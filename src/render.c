@@ -29,6 +29,10 @@ static const char *PLAYER_ATTACK_LEFT[3] = {
     " / \\"
 };
 
+
+
+
+
 // Bot parado (virado pra direita)
 static const char *BOT_IDLE_RIGHT[3] = {
     " @  ",
@@ -56,6 +60,9 @@ static const char *BOT_ATTACK_RIGHT[3] = {
     "<|‾‾",
     "/ \\ "
 };
+
+
+
 
 static void drawSprite(int x, int topY, const char *sprite[3]) {
     for (int i = 0; i < 3; i++) {
@@ -88,13 +95,14 @@ void drawHealthBar(int x, int y, int hp) {
 
 void drawTimer(int x, int y, int timeLeft) {
     screenGotoxy(x, y);
-    printf("TIME: %02d", timeLeft);  // imprime como 70, 08, 07, etc
+    printf("TIME: %02d", timeLeft); 
 }
 
 void drawFighter(const Fighter *f, int topY, int isPlayer) {
     const char **sprite = NULL;
     int facingRight = (f->facing == 1);
 
+    // Escolhe o sprite correto
     if (f->attacking) {
         if (isPlayer) {
             sprite = facingRight ? PLAYER_ATTACK_RIGHT : PLAYER_ATTACK_LEFT;
@@ -109,23 +117,38 @@ void drawFighter(const Fighter *f, int topY, int isPlayer) {
         }
     }
 
+    // Cores por tipo de lutador
+    if (isPlayer) {
+        screenSetColor(CYAN, BLACK);  
+    } else {
+        screenSetColor(LIGHTRED, BLACK);  
+    }
+
     drawSprite(f->x, topY, sprite);
+
+    screenSetColor(WHITE, BLACK);
 }
 
 void drawHUD(const Fighter *player, const Fighter *cpu, int timeLeft) {
+    screenSetColor(LIGHTGREEN, BLACK);
     drawHealthBar(SCRSTARTX + 1, SCRSTARTY + 2, player->hp);
+
+    screenSetColor(LIGHTRED, BLACK);
     drawHealthBar(SCRENDX - 24, SCRSTARTY + 2, cpu->hp);
 
-    // Timer no centro da parte de cima
     int centerX = (SCRSTARTX + SCRENDX) / 2 - 4;
+    screenSetColor(YELLOW, BLACK);
     drawTimer(centerX, SCRSTARTY + 1, timeLeft);
 
+    screenSetColor(LIGHTGREEN, BLACK);
     drawFloor();
 
+    screenSetColor(LIGHTCYAN, BLACK);
     screenGotoxy(SCRSTARTX + 1, SCRENDY);
     printf("[A/D] mover  [J] atacar  [Q] sair");
-}
 
+    screenSetColor(WHITE, BLACK);
+}
 void drawGame(const Fighter *player, const Fighter *cpu, int timeLeft) {
     clearGameArea();
     drawHUD(player, cpu, timeLeft);
@@ -145,17 +168,40 @@ void drawGame(const Fighter *player, const Fighter *cpu, int timeLeft) {
 void drawEndScreen(const Fighter *player, const Fighter *cpu) {
     clearGameArea();
 
-    screenGotoxy(MAXX / 2 - 6, MAXY / 2);
+    int result = 0; // 0 = empate, 1 = player vence, 2 = cpu vence
+
     if (player->hp > 0 && cpu->hp <= 0) {
-        printf("VOCE VENCEU!");
+        result = 1;
     } else if (cpu->hp > 0 && player->hp <= 0) {
-        printf("VOCE PERDEU!");
-    } else {
-        printf("EMPATE!");
+        result = 2;
     }
 
+    int msgX = MAXX / 2 - 6;
+    int msgY = MAXY / 2;
+
+    switch (result) {
+        case 1:
+            screenSetColor(LIGHTGREEN, BLACK);
+            screenGotoxy(msgX, msgY);
+            printf("VOCE VENCEU!");
+            break;
+
+        case 2:
+            screenSetColor(LIGHTRED, BLACK);
+            screenGotoxy(msgX, msgY);
+            printf("VOCE PERDEU!");
+            break;
+
+        default:
+            screenSetColor(YELLOW, BLACK);
+            screenGotoxy(msgX, msgY);
+            printf("EMPATE!");
+            break;
+    }
+
+    screenSetColor(WHITE, BLACK);
     screenGotoxy(MAXX / 2 - 12, MAXY / 2 + 2);
-    printf("Pressione qualquer tecla...");
+    printf("Pressione qualquer ESC para sair...");
 
     screenUpdate();
 
