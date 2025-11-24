@@ -21,8 +21,24 @@ int main(void) {
     int choice = runMenu();
     clearGameArea();
 
-    if (choice != 0) {
-        runFight();
+    switch (choice) {
+        case 1:
+            runFight();     
+            break;
+
+        case 2:
+            break;
+
+        case 3:
+            // runTutorial();     
+            break;
+
+        case 0:
+            break;
+
+        default:
+            // opção inválida
+            break;
     }
 
     keyboardDestroy();
