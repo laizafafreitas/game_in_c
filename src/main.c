@@ -6,6 +6,7 @@
 #include "lib/keyboard.h"
 #include "lib/timer.h"
 
+#include "config.h"
 #include "screens/game.h"      // runFight()
 #include "screens/menu.h"      // runMenu()
 #include "screens/tutorial.h"  // runTutorial()

@@ -82,7 +82,11 @@ static void playRound(GameState *game)
             }
 
             // RENDER (arena + HUD + lutadores)
-            drawGame(&game->player, &game->cpu, game->timeLeft);
+            drawGame(&game->player,
+                     &game->cpu,
+                     game->timeLeft,
+                     game->playerWins,
+                     game->cpuWins);
         }
     }
 
@@ -109,13 +113,13 @@ void runFight(void)
     GameState game;
     initGame(&game);
 
-    for (game.round = 1; game.round <= MAX_ROUNDS; game.round++)
+    for (game.round = 1; game.round <= MAX_ROUNDS && game.playerWins < 2 && game.cpuWins < 2; game.round++)
     {
         resetRound(&game);
         playRound(&game);
 
         // entre os rounds (exceto depois do último), roda o quiz
-        if (game.round < MAX_ROUNDS)
+        if (game.cpuWins == 1 && game.playerWins == 0)
         {
             runLogicQuiz();
         }

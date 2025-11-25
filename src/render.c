@@ -5,6 +5,7 @@
 
 #include "fighters.h"
 #include "render.h"
+#include "config.h"
 
 // -----------------------------------------------------------------------------
 // SPRITES
@@ -217,7 +218,11 @@ void drawFighter(const Fighter *f, int topY, int isPlayer)
 // HUD
 // -----------------------------------------------------------------------------
 
-void drawHUD(const Fighter *player, const Fighter *cpu, int timeLeft)
+void drawHUD(const Fighter *player,
+             const Fighter *cpu,
+             int timeLeft,
+             int playerWins,
+             int cpuWins)
 {
     screenSetColor(GREEN, LIGHTCYAN);
     drawHealthBar(SCRSTARTX + 1, SCRSTARTY + 2, player->hp);
@@ -226,6 +231,23 @@ void drawHUD(const Fighter *player, const Fighter *cpu, int timeLeft)
     int centerX = (SCRSTARTX + SCRENDX) / 2 - 4;
     screenSetColor(YELLOW, LIGHTCYAN);
     drawTimer(centerX, SCRSTARTY + 1, timeLeft);
+
+    // --- MARCADORES DE ROUND (pontinhos de vitória) ---
+    // linha acima do timer
+    int winsY = SCRSTARTY + 1;
+
+    // Player (grupo à esquerda)
+    screenSetColor(WHITE, LIGHTCYAN);
+    screenGotoxy(centerX - 14, winsY);
+    putchar(playerWins >= 1 ? 'v' : '.');
+    putchar(' ');
+    putchar(playerWins >= 2 ? 'v' : '.');
+
+    // CPU (grupo à direita)
+    screenGotoxy(centerX + 18, winsY);
+    putchar(cpuWins >= 1 ? 'v' : '.');
+    putchar(' ');
+    putchar(cpuWins >= 2 ? 'v' : '.');
 
     drawFloor();
 
@@ -240,11 +262,15 @@ void drawHUD(const Fighter *player, const Fighter *cpu, int timeLeft)
 // Tela principal da luta
 // -----------------------------------------------------------------------------
 
-void drawGame(const Fighter *player, const Fighter *cpu, int timeLeft)
+void drawGame(const Fighter *player,
+              const Fighter *cpu,
+              int timeLeft,
+              int playerWins,
+              int cpuWins)
 {
     clearGameArea();       // limpa só a área de jogo (sem piscar a tela inteira)
     drawBackground();
-    drawHUD(player, cpu, timeLeft);
+    drawHUD(player, cpu, timeLeft, playerWins, cpuWins);
 
     int floorY      = SCRENDY - 1;
     int fighterTopY = floorY - 3;
