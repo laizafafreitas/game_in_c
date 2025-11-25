@@ -10,5 +10,6 @@ void drawHealthBar(int x, int y, int hp);
 void drawHUD(const Fighter *player, const Fighter *cpu, int timeLeft);
 void drawGame(const Fighter *player, const Fighter *cpu, int timeLeft);
 void drawEndScreen(const Fighter *player, const Fighter *cpu);
+void drawLogicQuizScreen(int timeLeft);
 
 #endif

@@ -7,6 +7,10 @@
 typedef struct {
     Fighter player;
     Fighter cpu;
+
+    int round;
+    int playerWins;
+    int cpuWins;
     int timeLeft;
 } GameState;
 
