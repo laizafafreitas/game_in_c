@@ -72,7 +72,7 @@ static void drawSprite(int x, int topY, const char *sprite[3]) {
 }
 
 void drawFloor(void) {
-    screenGotoxy(SCRSTARTX - 1, SCRENDY - 1);
+    screenGotoxy(SCRSTARTX - 1, SCRENDY - 1.5);
     for (int i = 0; i < MAXX - 3; i++) {
         printf("=");
     }
@@ -98,30 +98,113 @@ void drawTimer(int x, int y, int timeLeft) {
     printf("TIME: %02d", timeLeft); 
 }
 
-void drawFighter(const Fighter *f, int topY, int isPlayer) {
-    const char **sprite = NULL;
-    int facingRight = (f->facing == 1);
+void drawBackground(void) {
+    //  CÉU / FUNDO
+    // faixas de "céu" com pontinhos
+    screenSetColor(LIGHTBLUE, BLACK);
+    for (int x = SCRSTARTX + 1; x < SCRENDX; x++) {
+        // linha mais alta de céu
+        screenGotoxy(x, SCRSTARTY + 3);
+        if (x % 7 == 0) printf(".");
+        else printf(" ");
 
-    // Escolhe o sprite correto
-    if (f->attacking) {
-        if (isPlayer) {
-            sprite = facingRight ? PLAYER_ATTACK_RIGHT : PLAYER_ATTACK_LEFT;
-        } else {
-            sprite = facingRight ? BOT_ATTACK_RIGHT : BOT_ATTACK_LEFT;
-        }
-    } else {
-        if (isPlayer) {
-            sprite = facingRight ? PLAYER_IDLE_RIGHT : PLAYER_IDLE_LEFT;
-        } else {
-            sprite = facingRight ? BOT_IDLE_RIGHT : BOT_IDLE_LEFT;
-        }
+        // segunda linha de céu
+        screenGotoxy(x, SCRSTARTY + 4);
+        if (x % 11 == 0) printf(".");
+        else printf(" ");
     }
 
-    // Cores por tipo de lutador
+    //  NUVENS
+    screenSetColor(CYAN, BLACK);
+    // nuvem esquerda
+    screenGotoxy(SCRSTARTX + 8, SCRSTARTY + 3);
+    printf("  _ _");
+    screenGotoxy(SCRSTARTX + 7, SCRSTARTY + 4);
+    printf(" _(   )__");
+    // nuvem direita
+    screenGotoxy(SCRENDX - 18, SCRSTARTY + 3);
+    printf(" __");
+    screenGotoxy(SCRENDX - 20, SCRSTARTY + 4);
+    printf("_(    )___");
+
+    //  "LETREIRO" AO FUNDO
+    screenSetColor(LIGHTMAGENTA, BLACK);
+    int midX = (SCRSTARTX + SCRENDX) / 2 - 8;
+    screenGotoxy(midX, SCRSTARTY + 6);
+    printf("[ LOGIC CITY ]");
+
+    //  PRÉDIOS / ESTRUTURAS
+    screenSetColor(DARKGRAY, BLACK);
+    for (int y = SCRSTARTY + 8; y < SCRENDY - 3; y++) {
+        // prédio da esquerda
+        screenGotoxy(SCRSTARTX + 5, y);
+        printf("||");
+        screenGotoxy(SCRSTARTX + 9, y);
+        printf("||");
+
+        // prédio da direita
+        screenGotoxy(SCRENDX - 10, y);
+        printf("||");
+        screenGotoxy(SCRENDX - 6, y);
+        printf("||");
+    }
+
+    // janelinhas
+    screenSetColor(CYAN, BLACK);
+    for (int y = SCRSTARTY + 8; y < SCRENDY - 4; y += 2) {
+        screenGotoxy(SCRSTARTX + 6, y);
+        printf("[]");
+        screenGotoxy(SCRSTARTX + 10, y);
+        printf("[]");
+        screenGotoxy(SCRENDX - 9, y);
+        printf("[]");
+        screenGotoxy(SCRENDX - 5, y);
+        printf("[]");
+    }
+
+    //  HORIZONTE 
+    screenSetColor(GREEN, BLACK);
+    for (int x = SCRSTARTX + 1; x < SCRENDX; x++) {
+        screenGotoxy(x, SCRENDY - 3);
+        if (x % 5 == 0) printf("^");  // graminha
+        else printf("_");
+    }
+
+    // pequeno “totem” lógico no fundo
+    screenSetColor(LIGHTMAGENTA, BLACK);
+    screenGotoxy(midX - 12, SCRENDY - 10);
+    printf("[ A v B ]");
+    screenGotoxy(midX + 20, SCRENDY - 10);
+    printf("[ ¬P -> Q ]");
+
+    // volta pra cor neutra
+    screenSetColor(WHITE, BLACK);
+}
+
+void drawFighter(const Fighter *f, int topY, int isPlayer) {
+    const char **idleLeft, **idleRight, **atkLeft, **atkRight;
+
     if (isPlayer) {
-        screenSetColor(CYAN, BLACK);  
+        idleLeft  = PLAYER_IDLE_LEFT;
+        idleRight = PLAYER_IDLE_RIGHT;
+        atkLeft   = PLAYER_ATTACK_LEFT;
+        atkRight  = PLAYER_ATTACK_RIGHT;
+        screenSetColor(LIGHTCYAN, BLACK);  
     } else {
-        screenSetColor(LIGHTRED, BLACK);  
+        idleLeft  = BOT_IDLE_LEFT;
+        idleRight = BOT_IDLE_RIGHT;
+        atkLeft   = BOT_ATTACK_LEFT;
+        atkRight  = BOT_ATTACK_RIGHT;
+        screenSetColor(LIGHTRED, BLACK);    
+    }
+
+    const char **sprite;
+    int facingRight = (f->facing == 1);
+
+    if (f->attacking) {
+        sprite = facingRight ? atkRight : atkLeft;
+    } else {
+        sprite = facingRight ? idleRight : idleLeft;
     }
 
     drawSprite(f->x, topY, sprite);
@@ -130,27 +213,32 @@ void drawFighter(const Fighter *f, int topY, int isPlayer) {
 }
 
 void drawHUD(const Fighter *player, const Fighter *cpu, int timeLeft) {
-    screenSetColor(LIGHTGREEN, BLACK);
+    screenSetColor(GREEN, BLACK);
     drawHealthBar(SCRSTARTX + 1, SCRSTARTY + 2, player->hp);
 
-    screenSetColor(LIGHTRED, BLACK);
+    screenSetColor(GREEN, BLACK);
     drawHealthBar(SCRENDX - 24, SCRSTARTY + 2, cpu->hp);
+
 
     int centerX = (SCRSTARTX + SCRENDX) / 2 - 4;
     screenSetColor(YELLOW, BLACK);
     drawTimer(centerX, SCRSTARTY + 1, timeLeft);
 
-    screenSetColor(LIGHTGREEN, BLACK);
+
+    screenSetColor(YELLOW, BLACK);
     drawFloor();
 
-    screenSetColor(LIGHTCYAN, BLACK);
+
+    screenSetColor(LIGHTBLUE, BLACK);
     screenGotoxy(SCRSTARTX + 1, SCRENDY);
     printf("[A/D] mover  [J] atacar  [Q] sair");
 
     screenSetColor(WHITE, BLACK);
 }
+
 void drawGame(const Fighter *player, const Fighter *cpu, int timeLeft) {
     clearGameArea();
+    drawBackground();
     drawHUD(player, cpu, timeLeft);
 
     // y dos lutadores (linha "do chão")
@@ -200,7 +288,7 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu) {
     }
 
     screenSetColor(WHITE, BLACK);
-    screenGotoxy(MAXX / 2 - 12, MAXY / 2 + 2);
+    screenGotoxy(MAXX / 2 - 16, MAXY / 2 + 2);
     printf("Pressione qualquer ESC para sair...");
 
     screenUpdate();
