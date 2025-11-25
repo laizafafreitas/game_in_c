@@ -264,28 +264,25 @@ void drawLogicQuizScreen(int timeLeft)
     clearGameArea();
 
     screenSetColor(WHITE, BLACK);
-    screenGotoxy(40, 2);
+    screenGotoxy(40, 3);
     printf("%d", timeLeft);
 
     screenSetColor(GREEN, BLACK);
-    screenGotoxy(20, 4);
+    screenGotoxy(13, 5);
     printf("== George Boole te da a chance de voltar mais forte ==");
 
     screenSetColor(WHITE, BLACK);
-    screenGotoxy(10, 7);
+    screenGotoxy(15, 8);
     printf("Quais conectivos logicos estao presentes na frase ?");
 
-    screenGotoxy(15, 9);
-    printf("\"Se chover entao eu nao vou para a praia\"");
-
     screenSetColor(RED, BLACK);
-    screenGotoxy(20, 12); printf("[ 0 ] apenas ->");
-    screenGotoxy(20, 13); printf("[ 1 ] apenas ~");
-    screenGotoxy(20, 14); printf("[ 2 ] -> + ~");
+    screenGotoxy(19, 10);
+    printf("\"Se chover então eu não vou para a praia\"");
 
-    screenSetColor(GREEN, BLACK);
-    screenGotoxy(25, 17);
-    printf("key code:");
+    screenSetColor(WHITE, BLACK);
+    screenGotoxy(33, 12); printf("[ 0 ] apenas ->");
+    screenGotoxy(33, 13); printf("[ 1 ] apenas ~");
+    screenGotoxy(33, 14); printf("[ 2 ] -> + ~");
 
     screenUpdate();
 }
