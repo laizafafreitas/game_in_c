@@ -2,9 +2,12 @@
 #include "lib/keyboard.h"
 #include "lib/screen.h"
 #include "utils.h"
+#include "sound.h"
 
 #include <stdlib.h>
 #include <math.h>
+#include "sound.h"
+
 
 // -----------------------------------------------------------------------------
 // Inicialização do lutador
@@ -46,6 +49,8 @@ void updateAttack(Fighter *attacker, Fighter *defender, int damage)
         if (abs(attacker->x - defender->x) <= ATTACK_RANGE)
         {
             defender->hp -= damage;
+            soundPlayHit();
+
         }
     }
 

@@ -7,6 +7,7 @@
 
 #include "config.h"
 #include "render.h"
+#include "sound.h"
 
 #define NUM_QUIZ_QUESTIONS 6
 static const int QUIZ_CORRECT_OPTION[NUM_QUIZ_QUESTIONS] = {
@@ -20,6 +21,9 @@ static const int QUIZ_CORRECT_OPTION[NUM_QUIZ_QUESTIONS] = {
 
 int runLogicQuiz(void)
 {
+    soundStopMusic();
+    soundPlayQuizTime();
+
     int timeLeft     = QUIZ_TIME;
     int frameCounter = 0;
 
@@ -64,5 +68,8 @@ int runLogicQuiz(void)
 
     // tempo acabou → errou
     drawQuizResultScreen(0, questionId);
+
+    soundStopMusic();
+    
     return 0;
 }

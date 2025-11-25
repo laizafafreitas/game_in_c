@@ -7,6 +7,8 @@
 #include "fighters.h"
 #include "render.h"
 #include "config.h"
+#include "sound.h"
+
 
 extern int playerBuffActive;
 
@@ -309,7 +311,7 @@ void drawGame(const Fighter *player,
 // -----------------------------------------------------------------------------
 
 void drawLogicQuizScreen(int timeLeft, int questionId)
-{
+{  
     clearGameArea();
 
     int logicCityY = SCRSTARTY + 7;
@@ -441,9 +443,6 @@ void drawLogicQuizScreen(int timeLeft, int questionId)
 }
 
 
-
-
-
 void drawQuizResultScreen(int acertou, int questionId)
 {
     clearGameArea();
@@ -456,12 +455,17 @@ void drawQuizResultScreen(int acertou, int questionId)
 
     if (acertou)
     {
+
+        soundPlayQuizCorrect();
+
         screenSetColor(GREEN, LIGHTCYAN);
         screenGotoxy(midX, midY);
         printf("✔ RESPOSTA CORRETA! Voce voltou mais forte!");
     }
     else
     {
+        soundPlayQuizWrong();
+
         screenSetColor(RED, LIGHTCYAN);
         screenGotoxy(midX, midY);
         printf("✘ RESPOSTA ERRADA!");
@@ -507,8 +511,6 @@ void drawQuizResultScreen(int acertou, int questionId)
 }
 
 
-
-
 void drawEndScreen(const Fighter *player, const Fighter *cpu)
 {
     clearGameArea();
@@ -526,18 +528,25 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu)
     switch (result)
     {
     case 1:
+        soundStopMusic();
+        soundPlayWin();
+
         screenSetColor(LIGHTGREEN, LIGHTCYAN);
         screenGotoxy(msgX, msgY);
         printf("VOCE VENCEU!");
         break;
 
     case 2:
+        soundStopMusic();
+        soundPlayLose();
+
         screenSetColor(LIGHTRED, LIGHTCYAN);
         screenGotoxy(msgX, msgY);
         printf("VOCE PERDEU!");
         break;
 
     default:
+        soundStopMusic();
         screenSetColor(YELLOW, LIGHTCYAN);
         screenGotoxy(msgX, msgY);
         printf("EMPATE!");

@@ -10,6 +10,7 @@
 #include "screens/game.h"      // runFight()
 #include "screens/menu.h"      // runMenu()
 #include "screens/tutorial.h"  // runTutorial()
+#include "sound.h"
 // se tiver um modo Vs Player depois, você pode incluir outro header
 
 int main(void) {
@@ -47,6 +48,7 @@ int main(void) {
                 break;
         }
     }
+    soundStopMusic();
 
     keyboardDestroy();
     screenDestroy();

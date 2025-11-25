@@ -12,6 +12,7 @@
 #include "fighters.h"
 #include "render.h"
 #include "utils.h"
+#include "sound.h"
 
 #define MAX_SCORE          1000
 #define SCORE_HP_PENALTY   5   // pontos perdidos por 1 HP perdido
@@ -254,6 +255,9 @@ static char *askPlayerName(void)
 // -----------------------------------------------------------------------------
 void runFight(void)
 {
+    soundStopMusic();
+    soundPlayFightMusic();
+
     GameState game;
     initGame(&game);
 
@@ -275,6 +279,8 @@ void runFight(void)
                 playerDamage     = 15;
                 playerBuffActive = 1;
             }
+            soundStopMusic();      
+        soundPlayFightMusic();  
         }
     }
 
@@ -292,6 +298,9 @@ void runFight(void)
 
         int hpTotalFinal = maxHpTotal - game.totalHpLost;
         if (hpTotalFinal < 0) hpTotalFinal = 0;
+
+        soundStopMusic();
+        soundPlayScoreMusic();
 
         drawScoreScreen(finalScore,
                         playerName,

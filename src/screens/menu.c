@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "lib/screen.h"
 #include "lib/keyboard.h"
+#include "sound.h"
 
 void drawMenuBackground(void)
 {
@@ -78,6 +79,8 @@ void drawMenuBackground(void)
 
 int runMenu(void)
 {
+    soundPlayMenuMusic();
+    
     int option = -1;
 
     clearGameArea();
