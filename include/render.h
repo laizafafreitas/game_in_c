@@ -18,8 +18,8 @@ void drawGame(const Fighter *player,
               int playerWins,
               int cpuWins);
 void drawEndScreen(const Fighter *player, const Fighter *cpu);
-void drawLogicQuizScreen(int timeLeft);
-void drawQuizResultScreen(int acertou);
+void drawLogicQuizScreen(int timeLeft, int questionId);
+void drawQuizResultScreen(int acertou, int questionId);
 void drawScoreScreen(int score,
                      const char *playerName,
                      int playerWonMatch,

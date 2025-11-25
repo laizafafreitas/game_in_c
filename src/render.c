@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "lib/screen.h"
 #include "lib/keyboard.h"
@@ -67,6 +68,16 @@ static void drawSprite(int x, int topY, const char *sprite[3])
         printf("%s", sprite[i]);
     }
 }
+
+static void drawCentered(int y, const char *text)
+{
+    int centerX = (SCRSTARTX + SCRENDX) / 2;
+    int len = (int)strlen(text);
+    int x = centerX - len / 2;
+    screenGotoxy(x, y);
+    printf("%s", text);
+}
+
 
 void drawFloor(void)
 {
@@ -297,66 +308,194 @@ void drawGame(const Fighter *player,
 // Tela do Quiz
 // -----------------------------------------------------------------------------
 
-void drawLogicQuizScreen(int timeLeft)
+void drawLogicQuizScreen(int timeLeft, int questionId)
 {
     clearGameArea();
 
-    screenSetColor(WHITE, BLACK);
-    screenGotoxy(40, 3);
-    printf("%d", timeLeft);
+    int logicCityY = SCRSTARTY + 7;
+    int booleY     = logicCityY + 2;
+    int questionY  = booleY + 3;
 
-    screenSetColor(GREEN, BLACK);
-    screenGotoxy(13, 5);
-    printf("== George Boole te da a chance de voltar mais forte ==");
 
-    screenSetColor(WHITE, BLACK);
-    screenGotoxy(15, 8);
-    printf("Quais conectivos logicos estao presentes na frase ?");
+    // Céu
+    screenSetColor(LIGHTBLUE, LIGHTCYAN);
 
-    screenSetColor(RED, BLACK);
-    screenGotoxy(19, 10);
-    printf("\"Se chover então eu não vou para a praia\"");
+    for (int x = SCRSTARTX + 1; x < SCRENDX; x++)
+    {
+        screenGotoxy(x, SCRSTARTY + 3);
+        printf((x % 7 == 0) ? "." : " ");
 
-    screenSetColor(WHITE, BLACK);
-    screenGotoxy(33, 12);
-    printf("[ 0 ] apenas ->");
-    screenGotoxy(33, 13);
-    printf("[ 1 ] apenas ~");
-    screenGotoxy(33, 14);
-    printf("[ 2 ] -> + ~");
+        screenGotoxy(x, SCRSTARTY + 4);
+        printf((x % 11 == 0) ? "." : " ");
+    }
+
+    // Nuvens
+    screenSetColor(CYAN, LIGHTCYAN);
+
+    screenGotoxy(SCRSTARTX + 8, SCRSTARTY + 3);
+    printf("  _ _");
+    screenGotoxy(SCRSTARTX + 7, SCRSTARTY + 4);
+    printf(" _(   )__");
+
+    screenGotoxy(SCRENDX - 18, SCRSTARTY + 3);
+    printf(" __");
+    screenGotoxy(SCRENDX - 20, SCRSTARTY + 4);
+    printf("_(    )___");
+
+    // ==============================
+    // LOGIC CITY (centralizado)
+    // ==============================
+    screenSetColor(LIGHTMAGENTA, LIGHTCYAN);
+    drawCentered(logicCityY, "[ LOGIC CITY ]");
+
+
+    // ==============================
+    // TIMER (centralizado)
+    // ==============================
+    char timerText[8];
+    sprintf(timerText, "%02d", timeLeft);
+
+    int quizCenterX = (SCRSTARTX + SCRENDX) / 2;
+    int timerX = quizCenterX - (int)(strlen(timerText) / 2);
+
+    screenSetColor(WHITE, LIGHTCYAN);
+    screenGotoxy(timerX, logicCityY - 2); 
+    printf("%s", timerText);
+
+    // ==============================
+    // GEORGE BOOLE (centralizado)
+    // ==============================
+    screenSetColor(GREEN, LIGHTCYAN);
+    drawCentered(booleY, "== George Boole te da a chance de voltar mais forte ==");
+
+    // ==============================
+    // PERGUNTA + FRASE + OPCOES (TODOS CENTRALIZADOS)
+    // ==============================
+    screenSetColor(WHITE, LIGHTCYAN);
+
+    switch (questionId)
+    {
+    case 0:
+        drawCentered(questionY, "Quais conectivos logicos estao presentes na frase?");
+        screenSetColor(YELLOW, LIGHTCYAN);
+        drawCentered(questionY + 2, "\"Se chover entao eu nao vou para a praia\"");
+        screenSetColor(WHITE, LIGHTCYAN);
+        drawCentered(questionY + 4, "[ 0 ] apenas ->");
+        drawCentered(questionY + 5, "[ 1 ] apenas ~");
+        drawCentered(questionY + 6, "[ 2 ] -> + ~");
+        break;
+
+    case 1:
+        drawCentered(questionY, "Qual conectivo aparece na frase abaixo?");
+        screenSetColor(YELLOW, LIGHTCYAN);
+        drawCentered(questionY + 2, "\"Hoje e sabado e esta chovendo\"");
+        screenSetColor(WHITE, LIGHTCYAN);
+        drawCentered(questionY + 4, "[ 0 ] apenas v");
+        drawCentered(questionY + 5, "[ 1 ] apenas ^");
+        drawCentered(questionY + 6, "[ 2 ] apenas ->");
+        break;
+
+    case 2:
+        drawCentered(questionY, "Qual conectivo representa a ideia da frase?");
+        screenSetColor(YELLOW, LIGHTCYAN);
+        drawCentered(questionY + 2, "\"Ou estudo logica ou reprovo na disciplina\"");
+        screenSetColor(WHITE, LIGHTCYAN);
+        drawCentered(questionY + 4, "[ 0 ] v");
+        drawCentered(questionY + 5, "[ 1 ] ->");
+        drawCentered(questionY + 6, "[ 2 ] <->");
+        break;
+
+    case 3:
+        drawCentered(questionY, "A negacao de P e representada por:");
+        screenSetColor(YELLOW, LIGHTCYAN);
+        drawCentered(questionY + 2, "\"Nao P\"");
+        screenSetColor(WHITE, LIGHTCYAN);
+        drawCentered(questionY + 4, "[ 0 ] ~P");
+        drawCentered(questionY + 5, "[ 1 ] P -> Q");
+        drawCentered(questionY + 6, "[ 2 ] P v Q");
+        break;
+
+    case 4:
+        drawCentered(questionY, "Qual conectivo representa \"P se, e somente se, Q\"?");
+        screenSetColor(YELLOW, LIGHTCYAN);
+        drawCentered(questionY + 2, "\"P se, e somente se, Q\"");
+        screenSetColor(WHITE, LIGHTCYAN);
+        drawCentered(questionY + 4, "[ 0 ] <->");
+        drawCentered(questionY + 5, "[ 1 ] ^");
+        drawCentered(questionY + 6, "[ 2 ] v");
+        break;
+
+    case 5:
+    default:
+        drawCentered(questionY, "Qual conectivo aparece na frase abaixo?");
+        screenSetColor(YELLOW, LIGHTCYAN);
+        drawCentered(questionY + 2, "\"Se eu passar no concurso, entao vou viajar\"");
+        screenSetColor(WHITE, LIGHTCYAN);
+        drawCentered(questionY + 4, "[ 0 ] ~");
+        drawCentered(questionY + 5, "[ 1 ] ->");
+        drawCentered(questionY + 6, "[ 2 ] <->");
+        break;
+    }
 
     screenUpdate();
 }
 
 
-void drawQuizResultScreen(int acertou)
+
+
+
+void drawQuizResultScreen(int acertou, int questionId)
 {
     clearGameArea();
 
     // Fundo igual ao do quiz (preto)
-    screenSetColor(WHITE, BLACK);
+    screenSetColor(WHITE, LIGHTCYAN);
 
-    int midX = MAXX / 2 - 18;
+    int midX = MAXX / 2 - 22;
     int midY = MAXY / 2;
 
     if (acertou)
     {
-        screenSetColor(GREEN, BLACK);
+        screenSetColor(GREEN, LIGHTCYAN);
         screenGotoxy(midX, midY);
-        printf("✔ RESPOSTA CORRETA! Buff ativado!");
+        printf("✔ RESPOSTA CORRETA! Voce voltou mais forte!");
     }
     else
     {
-        screenSetColor(RED, BLACK);
+        screenSetColor(RED, LIGHTCYAN);
         screenGotoxy(midX, midY);
         printf("✘ RESPOSTA ERRADA!");
 
-        screenSetColor(WHITE, BLACK);
+        screenSetColor(WHITE, LIGHTCYAN);
         screenGotoxy(midX, midY + 2);
-        printf("Resposta correta: [ 2 ] -> + ~");
+        printf("Resposta correta: ");
+
+        // Mostra a alternativa correta de acordo com a pergunta
+        switch (questionId)
+        {
+        case 0:
+            printf("[ 2 ] -> + ~");
+            break;
+        case 1:
+            printf("[ 1 ] apenas ^");
+            break;
+        case 2:
+            printf("[ 0 ] v");
+            break;
+        case 3:
+            printf("[ 0 ] ~P");
+            break;
+        case 4:
+            printf("[ 0 ] <->");
+            break;
+        case 5:
+        default:
+            printf("[ 1 ] ->");
+            break;
+        }
     }
 
-    screenSetColor(WHITE, BLACK);
+    screenSetColor(WHITE, LIGHTCYAN);
     screenGotoxy(midX, midY + 4);
     printf("Pressione qualquer tecla para voltar...");
 
@@ -366,6 +505,7 @@ void drawQuizResultScreen(int acertou)
     while (!keyhit());
     readch();
 }
+
 
 
 
@@ -441,7 +581,7 @@ void drawScoreScreen(int score,
     int startY = areaMidY - boxHeight / 2;
 
     // borda da caixa
-    screenSetColor(BLACK, LIGHTCYAN);
+    screenSetColor(LIGHTCYAN, LIGHTCYAN);
     for (int y = 0; y < boxHeight; y++)
     {
         screenGotoxy(startX, startY + y);

@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "screens/quiz.h"
 
 #include "lib/timer.h"
@@ -6,16 +8,30 @@
 #include "config.h"
 #include "render.h"
 
+#define NUM_QUIZ_QUESTIONS 6
+static const int QUIZ_CORRECT_OPTION[NUM_QUIZ_QUESTIONS] = {
+    2, // questionId 0 -> correta: [2]
+    1, // questionId 1 -> correta: [1]
+    0, // questionId 2 -> correta: [0]
+    0, // questionId 3 -> correta: [0]
+    0, // questionId 4 -> correta: [0]
+    1  // questionId 5 -> correta: [1]
+};
+
 int runLogicQuiz(void)
 {
     int timeLeft     = QUIZ_TIME;
     int frameCounter = 0;
 
+    // Escolhe uma pergunta aleatoria
+    int questionId = rand() % NUM_QUIZ_QUESTIONS;
+    int correctOption = QUIZ_CORRECT_OPTION[questionId]; // 0, 1 ou 2
+
     while (timeLeft > 0)
     {
         if (timerTimeOver())
         {
-            drawLogicQuizScreen(timeLeft);
+            drawLogicQuizScreen(timeLeft, questionId);
 
             frameCounter++;
             if (frameCounter >= FPS)
@@ -29,30 +45,24 @@ int runLogicQuiz(void)
         {
             int ch = readch();
 
-            switch (ch)
+            // Se apertou 0, 1 ou 2
+            if (ch == '0' || ch == '1' || ch == '2')
             {
-                case '2':
-                    // resposta correta
-                    drawQuizResultScreen(1);
-                    return 1;
+                int chosen = ch - '0'; // transforma '0','1','2' em 0,1,2
+                int acertou = (chosen == correctOption);
 
-                case '0':
-                case '1':
-                    // resposta errada
-                    drawQuizResultScreen(0);
-                    return 0;
-
-                case 27:  // ESC → considera erro
-                    drawQuizResultScreen(0);
-                    return 0;
-
-                default:
-                    break;
+                drawQuizResultScreen(acertou, questionId);
+                return acertou ? 1 : 0;
+            }
+            else if (ch == 27) // ESC
+            {
+                drawQuizResultScreen(0, questionId);
+                return 0;
             }
         }
     }
 
     // tempo acabou → errou
-    drawQuizResultScreen(0);
+    drawQuizResultScreen(0, questionId);
     return 0;
 }
