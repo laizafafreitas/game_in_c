@@ -6,9 +6,9 @@
 #include "lib/keyboard.h"
 #include "lib/timer.h"
 
-#include "game.h"      // runFight()
-#include "menu.h"      // runMenu()
-#include "tutorial.h"  // runTutorial()
+#include "screens/game.h"      // runFight()
+#include "screens/menu.h"      // runMenu()
+#include "screens/tutorial.h"  // runTutorial()
 // se tiver um modo Vs Player depois, você pode incluir outro header
 
 #define FPS 30
