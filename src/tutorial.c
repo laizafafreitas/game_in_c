@@ -6,7 +6,6 @@ void runTutorial(void)
 {
     clearGameArea();
 
-    // =========================
     // TÍTULO + NUVENS
     screenSetColor(CYAN, LIGHTCYAN);
     screenGotoxy(23, 5);
@@ -16,9 +15,7 @@ void runTutorial(void)
     screenGotoxy(23, 7);
     printf("╚══════════════════════════════╝");
 
-    // =========================
     // TABELA OPERADORES
-    // =========================
     screenSetColor(WHITE, LIGHTCYAN);
 
     screenGotoxy(11, 9);
@@ -49,9 +46,7 @@ void runTutorial(void)
     screenGotoxy(11, 18);
     printf("└────────────────────────────┴────────────────────────────┘");
 
-    // =========================
     // BOTÃO DE SAIR
-    // =========================
     screenSetColor(YELLOW, LIGHTCYAN);
     screenGotoxy(33, 21);
     printf("[ 0 ] Voltar");
@@ -65,7 +60,7 @@ void runTutorial(void)
         {
             int key = readch();
             if (key == '0' || key == 27)
-                break;
+                return;
         }
     }
 }

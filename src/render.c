@@ -101,7 +101,7 @@ void drawTimer(int x, int y, int timeLeft) {
 void drawBackground(void) {
     //  CÉU / FUNDO
     // faixas de "céu" com pontinhos
-    screenSetColor(LIGHTBLUE, BLACK);
+    screenSetColor(LIGHTBLUE, LIGHTCYAN);
     for (int x = SCRSTARTX + 1; x < SCRENDX; x++) {
         // linha mais alta de céu
         screenGotoxy(x, SCRSTARTY + 3);
@@ -115,7 +115,7 @@ void drawBackground(void) {
     }
 
     //  NUVENS
-    screenSetColor(CYAN, BLACK);
+    screenSetColor(CYAN, LIGHTCYAN);
     // nuvem esquerda
     screenGotoxy(SCRSTARTX + 8, SCRSTARTY + 3);
     printf("  _ _");
@@ -128,13 +128,13 @@ void drawBackground(void) {
     printf("_(    )___");
 
     //  "LETREIRO" AO FUNDO
-    screenSetColor(LIGHTMAGENTA, BLACK);
+    screenSetColor(LIGHTMAGENTA, LIGHTCYAN);
     int midX = (SCRSTARTX + SCRENDX) / 2 - 8;
     screenGotoxy(midX, SCRSTARTY + 6);
     printf("[ LOGIC CITY ]");
 
     //  PRÉDIOS / ESTRUTURAS
-    screenSetColor(DARKGRAY, BLACK);
+    screenSetColor(DARKGRAY, LIGHTCYAN);
     for (int y = SCRSTARTY + 8; y < SCRENDY - 3; y++) {
         // prédio da esquerda
         screenGotoxy(SCRSTARTX + 5, y);
@@ -150,7 +150,7 @@ void drawBackground(void) {
     }
 
     // janelinhas
-    screenSetColor(CYAN, BLACK);
+    screenSetColor(CYAN, LIGHTCYAN);
     for (int y = SCRSTARTY + 8; y < SCRENDY - 4; y += 2) {
         screenGotoxy(SCRSTARTX + 6, y);
         printf("[]");
@@ -163,7 +163,7 @@ void drawBackground(void) {
     }
 
     //  HORIZONTE 
-    screenSetColor(GREEN, BLACK);
+    screenSetColor(GREEN, LIGHTCYAN);
     for (int x = SCRSTARTX + 1; x < SCRENDX; x++) {
         screenGotoxy(x, SCRENDY - 3);
         if (x % 5 == 0) printf("^");  // graminha
@@ -171,14 +171,14 @@ void drawBackground(void) {
     }
 
     // pequeno “totem” lógico no fundo
-    screenSetColor(LIGHTMAGENTA, BLACK);
+    screenSetColor(LIGHTMAGENTA, LIGHTCYAN);
     screenGotoxy(midX - 12, SCRENDY - 10);
     printf("[ A v B ]");
     screenGotoxy(midX + 20, SCRENDY - 10);
     printf("[ ¬P -> Q ]");
 
     // volta pra cor neutra
-    screenSetColor(WHITE, BLACK);
+    screenSetColor(WHITE, LIGHTCYAN);
 }
 
 void drawFighter(const Fighter *f, int topY, int isPlayer) {
@@ -189,13 +189,13 @@ void drawFighter(const Fighter *f, int topY, int isPlayer) {
         idleRight = PLAYER_IDLE_RIGHT;
         atkLeft   = PLAYER_ATTACK_LEFT;
         atkRight  = PLAYER_ATTACK_RIGHT;
-        screenSetColor(LIGHTCYAN, BLACK);  
+        screenSetColor(LIGHTCYAN, LIGHTCYAN);  
     } else {
         idleLeft  = BOT_IDLE_LEFT;
         idleRight = BOT_IDLE_RIGHT;
         atkLeft   = BOT_ATTACK_LEFT;
         atkRight  = BOT_ATTACK_RIGHT;
-        screenSetColor(LIGHTRED, BLACK);    
+        screenSetColor(LIGHTRED, LIGHTCYAN);    
     }
 
     const char **sprite;
@@ -209,31 +209,31 @@ void drawFighter(const Fighter *f, int topY, int isPlayer) {
 
     drawSprite(f->x, topY, sprite);
 
-    screenSetColor(WHITE, BLACK);
+    screenSetColor(WHITE, LIGHTCYAN);
 }
 
 void drawHUD(const Fighter *player, const Fighter *cpu, int timeLeft) {
-    screenSetColor(GREEN, BLACK);
+    screenSetColor(GREEN, LIGHTCYAN);
     drawHealthBar(SCRSTARTX + 1, SCRSTARTY + 2, player->hp);
 
-    screenSetColor(GREEN, BLACK);
+    screenSetColor(GREEN, LIGHTCYAN);
     drawHealthBar(SCRENDX - 24, SCRSTARTY + 2, cpu->hp);
 
 
     int centerX = (SCRSTARTX + SCRENDX) / 2 - 4;
-    screenSetColor(YELLOW, BLACK);
+    screenSetColor(YELLOW, LIGHTCYAN);
     drawTimer(centerX, SCRSTARTY + 1, timeLeft);
 
 
-    screenSetColor(YELLOW, BLACK);
+    screenSetColor(YELLOW, LIGHTCYAN);
     drawFloor();
 
 
-    screenSetColor(LIGHTBLUE, BLACK);
+    screenSetColor(LIGHTBLUE, LIGHTCYAN);
     screenGotoxy(SCRSTARTX + 1, SCRENDY);
     printf("[A/D] mover  [J] atacar  [Q] sair");
 
-    screenSetColor(WHITE, BLACK);
+    screenSetColor(WHITE, LIGHTCYAN);
 }
 
 void drawGame(const Fighter *player, const Fighter *cpu, int timeLeft) {
@@ -269,25 +269,25 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu) {
 
     switch (result) {
         case 1:
-            screenSetColor(LIGHTGREEN, BLACK);
+            screenSetColor(LIGHTGREEN, LIGHTCYAN);
             screenGotoxy(msgX, msgY);
             printf("VOCE VENCEU!");
             break;
 
         case 2:
-            screenSetColor(LIGHTRED, BLACK);
+            screenSetColor(LIGHTRED, LIGHTCYAN);
             screenGotoxy(msgX, msgY);
             printf("VOCE PERDEU!");
             break;
 
         default:
-            screenSetColor(YELLOW, BLACK);
+            screenSetColor(YELLOW, LIGHTCYAN);
             screenGotoxy(msgX, msgY);
             printf("EMPATE!");
             break;
     }
 
-    screenSetColor(WHITE, BLACK);
+    screenSetColor(WHITE, LIGHTCYAN);
     screenGotoxy(MAXX / 2 - 16, MAXY / 2 + 2);
     printf("Pressione qualquer ESC para sair...");
 

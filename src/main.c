@@ -6,8 +6,10 @@
 #include "lib/keyboard.h"
 #include "lib/timer.h"
 
-#include "game.h"
-#include "menu.h"      
+#include "game.h"      // runFight()
+#include "menu.h"      // runMenu()
+#include "tutorial.h"  // runTutorial()
+// se tiver um modo Vs Player depois, você pode incluir outro header
 
 #define FPS 30
 
@@ -18,27 +20,33 @@ int main(void) {
     keyboardInit();
     timerInit(1000 / FPS);
 
-    int choice = runMenu();
-    clearGameArea();
+    int running = 1;
 
-    switch (choice) {
-        case 1:
-            runFight();     
-            break;
+    while (running) {
+        int choice = runMenu();  
 
-        case 2:
-            break;
+        switch (choice) {
+            case 1:
+                clearGameArea();
+                runFight();       
+                break;
 
-        case 3:
-            // runTutorial();     
-            break;
+            case 2:
+                break;
 
-        case 0:
-            break;
+            case 3:
+                clearGameArea();
+                runTutorial();    
+                break;
 
-        default:
-            // opção inválida
-            break;
+            case 0:
+                running = 0;
+                break;
+
+            default:
+                // opção inválida -> volta pro menu
+                break;
+        }
     }
 
     keyboardDestroy();
