@@ -100,8 +100,8 @@ void drawHealthBar(int x, int y, int hp)
 
 void drawTimer(int x, int y, int timeLeft)
 {
-    screenGotoxy(x, y);
-    printf("TIME: %02d", timeLeft);
+    screenGotoxy(x+3, y+1);
+    printf("%02d", timeLeft);
 }
 
 // -----------------------------------------------------------------------------
