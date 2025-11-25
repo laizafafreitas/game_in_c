@@ -56,6 +56,11 @@ void soundPlayHit(void)
     playOneShot("assets/sounds/punch.mp3");
 }
 
+void soundPlayBlock(void)
+{
+    playOneShot("assets/sounds/block.mp3");
+}
+
 void soundPlayWin(void)
 {
     playOneShot("assets/sounds/Win.mp3");

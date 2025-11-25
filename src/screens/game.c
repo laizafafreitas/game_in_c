@@ -14,11 +14,11 @@
 #include "utils.h"
 #include "sound.h"
 
-#define MAX_SCORE          1000
-#define SCORE_HP_PENALTY   5   // pontos perdidos por 1 HP perdido
-#define SCORE_TIME_PENALTY 2   // pontos perdidos por 1 segundo de luta
+#define MAX_SCORE 1000
+#define SCORE_HP_PENALTY 5   // pontos perdidos por 1 HP perdido
+#define SCORE_TIME_PENALTY 2 // pontos perdidos por 1 segundo de luta
 
-static int   calculateScore(const GameState *game);
+static int calculateScore(const GameState *game);
 static char *askPlayerName(void);
 
 int playerDamage = DAMAGE;
@@ -34,22 +34,22 @@ static void playRound(GameState *game);
 void initGame(GameState *game)
 {
     // posição inicial dos lutadores na arena
-    initFighter(&game->player, SCRSTARTX + 5,  1);   // 1 = direita
-    initFighter(&game->cpu,    SCRENDX   - 5, -1);   // -1 = esquerda
+    initFighter(&game->player, SCRSTARTX + 5, 1); // 1 = direita
+    initFighter(&game->cpu, SCRENDX - 5, -1);     // -1 = esquerda
 
-    game->round      = 1;
+    game->round = 1;
     game->playerWins = 0;
-    game->cpuWins    = 0;
-    game->timeLeft   = ROUND_TIME;
+    game->cpuWins = 0;
+    game->timeLeft = ROUND_TIME;
 
     // acumuladores pro score
     game->totalTimeSeconds = 0;
-    game->totalHpLost      = 0;
-    game->roundsPlayed     = 0;   
-    
+    game->totalHpLost = 0;
+    game->roundsPlayed = 0;
+
     // resultados de cada round (ainda não jogados)
     for (int i = 0; i < MAX_ROUNDS; i++)
-        game->roundResult[i] = -1;   // -1 = não houve round ainda
+        game->roundResult[i] = -1; // -1 = não houve round ainda
 
     playerDamage = DAMAGE;
 }
@@ -60,12 +60,12 @@ void initGame(GameState *game)
 static void resetRound(GameState *game)
 {
     // Reposiciona e reseta ataques/HP
-    initFighter(&game->player, SCRSTARTX + 5,  1);
-    initFighter(&game->cpu,    SCRENDX   - 5, -1);
+    initFighter(&game->player, SCRSTARTX + 5, 1);
+    initFighter(&game->cpu, SCRENDX - 5, -1);
 
     game->player.hp = MAX_HP;
-    game->cpu.hp    = MAX_HP;
-    game->timeLeft  = ROUND_TIME;
+    game->cpu.hp = MAX_HP;
+    game->timeLeft = ROUND_TIME;
 }
 
 // -----------------------------------------------------------------------------
@@ -73,16 +73,16 @@ static void resetRound(GameState *game)
 // -----------------------------------------------------------------------------
 static void playRound(GameState *game)
 {
-    int running      = 1;
-    int frameCounter = 0;   // conta quantos frames já passaram (pra virar segundos)
+    int running = 1;
+    int frameCounter = 0; // conta quantos frames já passaram (pra virar segundos)
 
     while (running &&
            game->player.hp > 0 &&
-           game->cpu.hp    > 0 &&
-           game->timeLeft  > 0)
+           game->cpu.hp > 0 &&
+           game->timeLeft > 0)
     {
         // INPUT (sempre pode ler input)
-        handlePlayerInput(&running, &game->player);
+        handlePlayerInput(&running, &game->player, &game->cpu);
 
         // limita posição do player dentro da arena
         game->player.x = clamp(game->player.x, SCRSTARTX + 1, SCRENDX - 1);
@@ -93,9 +93,21 @@ static void playRound(GameState *game)
             // lógica da CPU
             updateCPU(&game->cpu, &game->player);
 
+            // sempre olhar para o outro:
+            if (game->player.x < game->cpu.x)
+            {
+                game->player.facing = 1; // olhando pra direita
+                game->cpu.facing = -1;   // olhando pra esquerda
+            }
+            else
+            {
+                game->player.facing = -1;
+                game->cpu.facing = 1;
+            }
+
             // ataques (aplicam dano e atualizam timers)
             updateAttack(&game->player, &game->cpu, playerDamage);
-            updateAttack(&game->cpu,    &game->player, DAMAGE);
+            updateAttack(&game->cpu, &game->player, DAMAGE);
 
             // conta frames para transformar em segundos de round
             frameCounter++;
@@ -115,18 +127,21 @@ static void playRound(GameState *game)
     }
 
     // Se o jogador saiu do round (ESC, etc.), só retorna
-    if (!running) return;
+    if (!running)
+        return;
 
     // --- ACUMULA TEMPO E VIDA PERDIDA PARA O SCORE ---
 
     // tempo gasto neste round
     int timeSpent = ROUND_TIME - game->timeLeft;
-    if (timeSpent < 0) timeSpent = 0;
+    if (timeSpent < 0)
+        timeSpent = 0;
     game->totalTimeSeconds += timeSpent;
 
     // vida perdida neste round (considerando HP máximo)
     int hpLostThisRound = MAX_HP - game->player.hp;
-    if (hpLostThisRound < 0) hpLostThisRound = 0;
+    if (hpLostThisRound < 0)
+        hpLostThisRound = 0;
     game->totalHpLost += hpLostThisRound;
 
     // Decide quem venceu o round (ou se empatou)
@@ -164,10 +179,10 @@ static int calculateScore(const GameState *game)
     // penaliza pelo tempo total
     score -= game->totalTimeSeconds * SCORE_TIME_PENALTY;
 
-    if (score < 0) score = 0;
+    if (score < 0)
+        score = 0;
     return score;
 }
-
 
 // -----------------------------------------------------------------------------
 // Ler o nome do jogador com alocação dinâmica
@@ -249,7 +264,6 @@ static char *askPlayerName(void)
     return name;
 }
 
-
 // -----------------------------------------------------------------------------
 // Função chamada pelo main: controla a sequência de rounds + quiz + tela final
 // -----------------------------------------------------------------------------
@@ -275,40 +289,43 @@ void runFight(void)
         {
             int acertou = runLogicQuiz();
 
-            if (acertou) {
-                playerDamage     = 15;
+            if (acertou)
+            {
+                playerDamage = 15;
                 playerBuffActive = 1;
             }
-            soundStopMusic();      
-        soundPlayFightMusic();  
+            soundStopMusic();
+            soundPlayFightMusic();
         }
     }
 
     // quem ganhou a melhor de 3?
     int playerWonMatch = (game.playerWins > game.cpuWins);
 
-        drawEndScreen(&game.player, &game.cpu);
+    drawEndScreen(&game.player, &game.cpu);
 
-        int finalScore   = calculateScore(&game);
-        char *playerName = askPlayerName();
+    int finalScore = calculateScore(&game);
+    char *playerName = askPlayerName();
 
-        // vida máxima possível e vida "mantida"
-        int maxHpTotal = MAX_HP * game.roundsPlayed;
-        if (maxHpTotal <= 0) maxHpTotal = MAX_HP;
+    // vida máxima possível e vida "mantida"
+    int maxHpTotal = MAX_HP * game.roundsPlayed;
+    if (maxHpTotal <= 0)
+        maxHpTotal = MAX_HP;
 
-        int hpTotalFinal = maxHpTotal - game.totalHpLost;
-        if (hpTotalFinal < 0) hpTotalFinal = 0;
+    int hpTotalFinal = maxHpTotal - game.totalHpLost;
+    if (hpTotalFinal < 0)
+        hpTotalFinal = 0;
 
-        soundStopMusic();
-        soundPlayScoreMusic();
+    soundStopMusic();
+    soundPlayScoreMusic();
 
-        drawScoreScreen(finalScore,
-                        playerName,
-                        playerWonMatch,
-                        maxHpTotal,
-                        hpTotalFinal,
-                        game.roundsPlayed,
-                        game.roundResult);
+    drawScoreScreen(finalScore,
+                    playerName,
+                    playerWonMatch,
+                    maxHpTotal,
+                    hpTotalFinal,
+                    game.roundsPlayed,
+                    game.roundResult);
 
-        free(playerName);
+    free(playerName);
 }

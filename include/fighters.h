@@ -7,6 +7,7 @@
 #define DAMAGE          10
 #define ATTACK_DURATION 10
 #define MIN_DISTANCE    4
+#define DEFENSE_MULTIPLIER 0.4
 
 // Direção que o lutador está virado
 typedef enum {
@@ -21,13 +22,14 @@ typedef struct {
     Facing facing;      // direção
     int attacking;      // 1 se está atacando, 0 caso contrário
     int attack_timer;   // frames restantes do ataque atual
+    int defending;
 } Fighter;
 
 // API pública
 void initFighter(Fighter *f, int startX, Facing facing);
 void startAttack(Fighter *f);
 void updateAttack(Fighter *attacker, Fighter *defender, int damage);
-void handlePlayerInput(int *running, Fighter *player);
+void handlePlayerInput(int *running, Fighter *player, Fighter *cpu);
 void updateCPU(Fighter *cpu, Fighter *player);
 
 #endif

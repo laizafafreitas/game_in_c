@@ -7,6 +7,7 @@ void soundPlayWin(void);
 void soundPlayLose(void);
 void soundPlayQuizCorrect(void);
 void soundPlayQuizWrong(void);
+void soundPlayBlock(void);
 
 // Música de fundo
 void soundPlayMenuMusic(void);

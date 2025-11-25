@@ -8,18 +8,18 @@
 #include <math.h>
 #include "sound.h"
 
-
 // -----------------------------------------------------------------------------
 // Inicialização do lutador
 // -----------------------------------------------------------------------------
 
 void initFighter(Fighter *f, int startX, Facing facing)
 {
-    f->x            = startX;
-    f->hp           = MAX_HP;
-    f->facing       = facing;
-    f->attacking    = 0;
+    f->x = startX;
+    f->hp = MAX_HP;
+    f->facing = facing;
+    f->attacking = 0;
     f->attack_timer = 0;
+    f->defending = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -30,7 +30,7 @@ void startAttack(Fighter *f)
 {
     if (!f->attacking)
     {
-        f->attacking    = 1;
+        f->attacking = 1;
         f->attack_timer = ATTACK_DURATION;
     }
 }
@@ -41,16 +41,25 @@ void startAttack(Fighter *f)
 
 void updateAttack(Fighter *attacker, Fighter *defender, int damage)
 {
-    if (!attacker->attacking) return;
+    if (!attacker->attacking)
+        return;
 
     // Só causa dano no frame inicial do ataque
     if (attacker->attack_timer == ATTACK_DURATION)
     {
         if (abs(attacker->x - defender->x) <= ATTACK_RANGE)
         {
-            defender->hp -= damage;
-            soundPlayHit();
+            int finalDamage = damage;
 
+            if (defender->defending)
+            {
+                finalDamage = (damage * DEFENSE_MULTIPLIER);
+                if (finalDamage < 1 && damage > 0) {
+                    finalDamage = 1;   
+                }
+            }
+            defender->hp -= finalDamage;
+            soundPlayHit();
         }
     }
 
@@ -58,7 +67,7 @@ void updateAttack(Fighter *attacker, Fighter *defender, int damage)
 
     if (attacker->attack_timer <= 0)
     {
-        attacker->attacking    = 0;
+        attacker->attacking = 0;
         attacker->attack_timer = 0;
     }
 }
@@ -67,9 +76,10 @@ void updateAttack(Fighter *attacker, Fighter *defender, int damage)
 // Input do jogador
 // -----------------------------------------------------------------------------
 
-void handlePlayerInput(int *running, Fighter *player)
+void handlePlayerInput(int *running, Fighter *player, Fighter *cpu)
 {
-    if (!keyhit()) return;
+    if (!keyhit())
+        return;
 
     int k = readch();
 
@@ -80,21 +90,32 @@ void handlePlayerInput(int *running, Fighter *player)
         return;
     }
 
+     player->defending = 0;
     // mover
     if (k == 'a' || k == 'A')
     {
         player->x--;
-        player->facing = FACING_LEFT;
+        // se o player está à direita do CPU, andar para a ESQUERDA = DEFESA
+        if (player->x < cpu->x){
+            player->defending = 1;
+            soundPlayBlock();
+        }    
     }
     else if (k == 'd' || k == 'D')
     {
         player->x++;
-        player->facing = FACING_RIGHT;
+
+        // se o player está à esquerda do CPU, andar para a DIREITA = DEFESA
+        if (player->x > cpu->x){
+            player->defending = 1;
+            soundPlayBlock();
+        } 
     }
     // atacar
     else if (k == 'j' || k == 'J')
     {
         startAttack(player);
+        player->defending = 0;
     }
 
     // limita posição dentro da arena
@@ -114,7 +135,7 @@ void handlePlayerInput(int *running, Fighter *player)
 void updateCPU(Fighter *cpu, Fighter *player)
 {
     // variáveis que persistem entre frames (somente para o BOT)
-    static int last_hp       = -1;
+    static int last_hp = -1;
     static int retreat_timer = 0;
 
     // inicializa na primeira chamada
