@@ -1,5 +1,6 @@
 #include "fighters.h"
 #include "lib/keyboard.h" // keyhit, readch
+#include <stdlib.h>       // rand, abs
 
 void initFighter(Fighter *f, int startX, int facing) {
     f->x            = startX;
@@ -54,11 +55,62 @@ void handlePlayerInput(int *running, Fighter *player) {
     }
 }
 
+/*
+ * IA do bot:
+ * - Anda em direção ao player normalmente.
+ * - Às vezes recua quando toma dano (chance aleatória).
+ * - Quando está perto, ataca com mais frequência.
+ */
 void updateCPU(Fighter *cpu, Fighter *player) {
-    int dist = player->x - cpu->x; // pode ser negativo
+    // variáveis estáticas: lembram o valor entre chamadas
+    static int last_hp       = -1;
+    static int retreat_timer = 0;
 
+    // inicializa last_hp na primeira vez
+    if (last_hp == -1) {
+        last_hp = cpu->hp;
+    }
+
+    // Detecta se tomou dano neste frame
+    if (cpu->hp < last_hp) {
+        // tomou dano → às vezes recua
+        if (rand() % 2 == 0) {   
+            retreat_timer = 10; 
+        }
+    }
+    last_hp = cpu->hp;
+
+    int dist = player->x - cpu->x;
+
+    // 1) RECUAR SE PLAYER ESTÁ NA MESMA POSIÇÃO (ENCOSTOU)
+    if (player->x == cpu->x) {
+        if (rand() % 2 == 0) { 
+            if (dist > 0) {
+                cpu->x--;        // player à direita → bot vai pra esquerda
+                cpu->facing = -1;
+            } else {
+                cpu->x++;        // player à esquerda → bot vai pra direita
+                cpu->facing = 1;
+            }
+            return;
+        }
+    }
+
+    // 2) RECUO DE DANO (RETREAT MODE)
+    if (retreat_timer > 0) {
+        if (dist > 0) {
+            cpu->x--;
+            cpu->facing = -1;
+        } else {
+            cpu->x++;
+            cpu->facing = 1;
+        }
+        retreat_timer--;
+        return;
+    }
+
+    // 3) AVANÇAR NORMALMENTE SE ESTIVER LONGE
     if (abs(dist) > MIN_DISTANCE) {
-        // se está longe, aproxima
         if (dist > 0) {
             cpu->x++;
             cpu->facing = 1;
@@ -66,10 +118,12 @@ void updateCPU(Fighter *cpu, Fighter *player) {
             cpu->x--;
             cpu->facing = -1;
         }
-    } else {
-        // perto o suficiente: tenta atacar às vezes
-        if (!cpu->attacking && rand() % 15 == 0) {
+    }
+    else {
+        // 4) PERTO O SUFICIENTE: ATACAR MAIS VEZES
+        if (!cpu->attacking && rand() % 6 == 0) { 
             startAttack(cpu);
         }
     }
 }
+
