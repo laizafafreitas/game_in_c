@@ -299,3 +299,4 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu) {
             key = readch();
         }
 }
+}
