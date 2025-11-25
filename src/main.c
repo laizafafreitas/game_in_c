@@ -11,8 +11,6 @@
 #include "screens/tutorial.h"  // runTutorial()
 // se tiver um modo Vs Player depois, você pode incluir outro header
 
-#define FPS 30
-
 int main(void) {
     srand((unsigned) time(NULL));
 
