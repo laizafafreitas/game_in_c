@@ -31,15 +31,28 @@ int runLogicQuiz(void)
 
             switch (ch)
             {
-                case '2': return 1; // correta
+                case '2':
+                    // resposta correta
+                    drawQuizResultScreen(1);
+                    return 1;
+
                 case '0':
-                case '1': return 0; // errada
-                case 27:  return 0; // ESC → erro
-                default: break;
+                case '1':
+                    // resposta errada
+                    drawQuizResultScreen(0);
+                    return 0;
+
+                case 27:  // ESC → considera erro
+                    drawQuizResultScreen(0);
+                    return 0;
+
+                default:
+                    break;
             }
         }
     }
 
     // tempo acabou → errou
+    drawQuizResultScreen(0);
     return 0;
 }

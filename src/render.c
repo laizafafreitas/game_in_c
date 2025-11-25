@@ -329,6 +329,46 @@ void drawLogicQuizScreen(int timeLeft)
 }
 
 
+void drawQuizResultScreen(int acertou)
+{
+    clearGameArea();
+
+    // Fundo igual ao do quiz (preto)
+    screenSetColor(WHITE, BLACK);
+
+    int midX = MAXX / 2 - 18;
+    int midY = MAXY / 2;
+
+    if (acertou)
+    {
+        screenSetColor(GREEN, BLACK);
+        screenGotoxy(midX, midY);
+        printf("✔ RESPOSTA CORRETA! Buff ativado!");
+    }
+    else
+    {
+        screenSetColor(RED, BLACK);
+        screenGotoxy(midX, midY);
+        printf("✘ RESPOSTA ERRADA!");
+
+        screenSetColor(WHITE, BLACK);
+        screenGotoxy(midX, midY + 2);
+        printf("Resposta correta: [ 2 ] -> + ~");
+    }
+
+    screenSetColor(WHITE, BLACK);
+    screenGotoxy(midX, midY + 4);
+    printf("Pressione qualquer tecla para voltar...");
+
+    screenUpdate();
+
+    // Espera qualquer tecla
+    while (!keyhit());
+    readch();
+}
+
+
+
 void drawEndScreen(const Fighter *player, const Fighter *cpu)
 {
     clearGameArea();
