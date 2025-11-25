@@ -328,9 +328,6 @@ void drawLogicQuizScreen(int timeLeft)
     screenUpdate();
 }
 
-// -----------------------------------------------------------------------------
-// Tela final de vitória/derrota
-// -----------------------------------------------------------------------------
 
 void drawEndScreen(const Fighter *player, const Fighter *cpu)
 {
@@ -368,7 +365,105 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu)
     }
 
     screenSetColor(WHITE, LIGHTCYAN);
-    screenGotoxy(MAXX / 2 - 12, MAXY / 2 + 2);
+    screenGotoxy(MAXX / 2 - 16, MAXY / 2 + 2);
+    printf("Pressione ESC para continuar...");
+
+    screenUpdate();
+
+    int key = 0;
+    while (key != 27)
+        if (keyhit())
+            key = readch();
+}
+
+
+void drawScoreScreen(int score,
+                     const char *playerName,
+                     int playerWonMatch,
+                     int maxHpTotal,
+                     int hpTotalFinal,
+                     int roundsPlayed,
+                     const int roundResults[])
+{
+    clearGameArea();
+    drawBackground();  // mantém o mesmo fundo da luta
+
+    // Caixa mais compacta
+    int boxWidth  = 54;
+    int boxHeight = 14;
+
+    // >>> Centralizar dentro da ÁREA ÚTIL da arena, não no terminal inteiro
+    int areaTop    = SCRSTARTY + 6;      // um pouco abaixo do letreiro
+    int areaBottom = SCRENDY - 3;        // um pouco acima da grama
+    int areaMidY   = (areaTop + areaBottom) / 2;
+
+    int startX = MAXX / 2 - boxWidth  / 2;
+    int startY = areaMidY - boxHeight / 2;
+
+    // borda da caixa
+    screenSetColor(BLACK, LIGHTCYAN);
+    for (int y = 0; y < boxHeight; y++)
+    {
+        screenGotoxy(startX, startY + y);
+        for (int x = 0; x < boxWidth; x++)
+        {
+            if (y == 0 || y == boxHeight - 1)
+                putchar('-');
+            else if (x == 0 || x == boxWidth - 1)
+                putchar('|');
+            else
+                putchar(' ');
+        }
+    }
+
+    // ====== CONTEÚDO CENTRALIZADO ======
+    screenSetColor(YELLOW, LIGHTCYAN);
+    screenGotoxy(startX + 3, startY + 1);
+    if (playerWonMatch)
+        printf("RESULTADO: VITORIA");
+    else
+        printf("RESULTADO: DERROTA");
+
+    screenSetColor(WHITE, LIGHTCYAN);
+    screenGotoxy(startX + 3, startY + 3);
+    printf("Jogador: %s", playerName ? playerName : "Player");
+
+    screenGotoxy(startX + 3, startY + 4);
+    printf("Score final: %d", score);
+
+    // Vida num formato mais compacto
+    screenGotoxy(startX + 3, startY + 6);
+    printf("Vida: %d / %d (mantida / possivel)", hpTotalFinal, maxHpTotal);
+
+    // Rounds + resultados
+    screenGotoxy(startX + 3, startY + 8);
+    printf("Rounds jogados: %d", roundsPlayed);
+
+    screenSetColor(CYAN, LIGHTCYAN);
+    screenGotoxy(startX + 3, startY + 9);
+    printf("Resultado por round:");
+
+    // cabem até 3 linhas de rounds dentro da caixa
+    int maxLinesRounds = 3;
+    int roundsToShow = roundsPlayed;
+    if (roundsToShow > maxLinesRounds)
+        roundsToShow = maxLinesRounds;
+
+    for (int i = 0; i < roundsToShow; i++)
+    {
+        const char *texto = "Empate";
+        if (roundResults[i] == 1)
+            texto = "Vitoria do jogador";
+        else if (roundResults[i] == 2)
+            texto = "Vitoria do bot";
+
+        screenGotoxy(startX + 5, startY + 10 + i);
+        printf("Round %d: %s", i + 1, texto);
+    }
+
+    // instrução
+    screenSetColor(LIGHTMAGENTA, LIGHTCYAN);
+    screenGotoxy(startX + 13, startY + boxHeight - 1);
     printf("Pressione ESC para sair...");
 
     screenUpdate();
@@ -378,3 +473,4 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu)
         if (keyhit())
             key = readch();
 }
+

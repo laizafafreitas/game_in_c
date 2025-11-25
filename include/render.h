@@ -19,5 +19,11 @@ void drawGame(const Fighter *player,
               int cpuWins);
 void drawEndScreen(const Fighter *player, const Fighter *cpu);
 void drawLogicQuizScreen(int timeLeft);
-
+void drawScoreScreen(int score,
+                     const char *playerName,
+                     int playerWonMatch,
+                     int maxHpTotal,
+                     int hpTotalFinal,
+                     int roundsPlayed,
+                     const int roundResults[]);
 #endif
