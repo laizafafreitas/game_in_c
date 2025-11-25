@@ -18,33 +18,33 @@ void runTutorial(void)
     // TABELA OPERADORES
     screenSetColor(WHITE, LIGHTCYAN);
 
-    screenGotoxy(11, 9);
-    printf("┌────────────────────────────┬────────────────────────────┐");
-    screenGotoxy(11, 10);
-    printf("│          OPERADOR          │         SIGNIFICADO        │");
-    screenGotoxy(11, 11);
-    printf("├────────────────────────────┼────────────────────────────┤");
+    screenGotoxy(8, 9);
+    printf("┌────────────────────────────┬──────────────────────────────────┐");
+    screenGotoxy(8, 10);
+    printf("│          OPERADOR          │         SIGNIFICADO              │");
+    screenGotoxy(8, 11);
+    printf("├────────────────────────────┼──────────────────────────────────┤");
 
-    screenGotoxy(11, 12);
-    printf("│   ~  /  ¬                  │   Negação (NOT)            │");
+    screenGotoxy(8, 12);
+    printf("│   ~  /  ¬                  │   Negação (Não)                  │");
 
-    screenGotoxy(11, 13);
-    printf("│   ^  /  &  /  &&           │   Conjunção (AND)          │");
+    screenGotoxy(8, 13);
+    printf("│   ^  /  &  /  &&           │   Conjunção (E)                  │");
 
-    screenGotoxy(11, 14);
-    printf("│   v  /  |  /  ||           │   Disjunção (OR)           │");
+    screenGotoxy(8, 14);
+    printf("│   v  /  |  /  ||           │   Disjunção (OU)                 │");
 
-    screenGotoxy(11, 15);
-    printf("│   ⊕  /  ^                  │   XOR (OU exclusivo)       │");
+    screenGotoxy(8, 15);
+    printf("│   ⊕  /  ^                  │   XOR (OU exclusivo)             │");
 
-    screenGotoxy(11, 16);
-    printf("│   ->                       │   Implicação               │");
+    screenGotoxy(8, 16);
+    printf("│   ->                       │   Implicação  (SE, ENTÃO)        │");
 
-    screenGotoxy(11, 17);
-    printf("│   <->  /  =                │   Bicondicional            │");
+    screenGotoxy(8, 17);
+    printf("│   <->  /  =                │   Bicondicional (SE, SOMENTE SE) │");
 
-    screenGotoxy(11, 18);
-    printf("└────────────────────────────┴────────────────────────────┘");
+    screenGotoxy(8, 18);
+    printf("└────────────────────────────┴──────────────────────────────────┘");
 
     // BOTÃO DE SAIR
     screenSetColor(YELLOW, LIGHTCYAN);
