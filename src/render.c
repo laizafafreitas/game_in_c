@@ -293,6 +293,9 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu) {
 
     screenUpdate();
 
-    while (!keyhit()) { /* espera */ }
-    (void)readch();
+    int key = 0;
+    while (key != 27) {   // 27 = código ASCII do ESC
+        if (keyhit()) {
+            key = readch();
+        }
 }
