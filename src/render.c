@@ -7,59 +7,53 @@
 #include "render.h"
 #include "config.h"
 
+extern int playerBuffActive;
+
 // -----------------------------------------------------------------------------
 // SPRITES
 // -----------------------------------------------------------------------------
 static const char *PLAYER_IDLE_LEFT[3] = {
     " O  ",
     "/|>",
-    "/ \\"
-};
+    "/ \\"};
 
 static const char *PLAYER_IDLE_RIGHT[3] = {
     " O  ",
     "<|\\",
-    "/ \\"
-};
+    "/ \\"};
 
 // Player atacando
 static const char *PLAYER_ATTACK_RIGHT[3] = {
     " O ",
     "<|‾‾",
-    "/ \\"
-};
+    "/ \\"};
 
 static const char *PLAYER_ATTACK_LEFT[3] = {
     "  O ",
     "‾‾|>",
-    " / \\"
-};
+    " / \\"};
 
 // Bot parado
 static const char *BOT_IDLE_RIGHT[3] = {
     " @  ",
     "<|\\",
-    "/ \\"
-};
+    "/ \\"};
 
 static const char *BOT_IDLE_LEFT[3] = {
     " @  ",
     "/|>",
-    "/ \\"
-};
+    "/ \\"};
 
 // Bot atacando
 static const char *BOT_ATTACK_LEFT[3] = {
     "  @ ",
     "‾‾|>",
-    " / \\"
-};
+    " / \\"};
 
 static const char *BOT_ATTACK_RIGHT[3] = {
     " @  ",
     "<|‾‾",
-    "/ \\ "
-};
+    "/ \\ "};
 
 // -----------------------------------------------------------------------------
 // Funções internas de render
@@ -85,8 +79,10 @@ void drawHealthBar(int x, int y, int hp)
 {
     int width = 20;
 
-    if (hp < 0) hp = 0;
-    if (hp > MAX_HP) hp = MAX_HP;
+    if (hp < 0)
+        hp = 0;
+    if (hp > MAX_HP)
+        hp = MAX_HP;
 
     int filled = (hp * width) / MAX_HP;
 
@@ -101,7 +97,7 @@ void drawHealthBar(int x, int y, int hp)
 
 void drawTimer(int x, int y, int timeLeft)
 {
-    screenGotoxy(x+3, y+1);
+    screenGotoxy(x + 3, y + 1);
     printf("%02d", timeLeft);
 }
 
@@ -146,20 +142,28 @@ void drawBackground(void)
     screenSetColor(DARKGRAY, LIGHTCYAN);
     for (int y = SCRSTARTY + 8; y < SCRENDY - 3; y++)
     {
-        screenGotoxy(SCRSTARTX + 5, y);  printf("||");
-        screenGotoxy(SCRSTARTX + 9, y);  printf("||");
-        screenGotoxy(SCRENDX - 10, y);   printf("||");
-        screenGotoxy(SCRENDX - 6,  y);   printf("||");
+        screenGotoxy(SCRSTARTX + 5, y);
+        printf("||");
+        screenGotoxy(SCRSTARTX + 9, y);
+        printf("||");
+        screenGotoxy(SCRENDX - 10, y);
+        printf("||");
+        screenGotoxy(SCRENDX - 6, y);
+        printf("||");
     }
 
     // Janelas
     screenSetColor(CYAN, LIGHTCYAN);
     for (int y = SCRSTARTY + 8; y < SCRENDY - 4; y += 2)
     {
-        screenGotoxy(SCRSTARTX + 6, y); printf("[]");
-        screenGotoxy(SCRSTARTX + 10, y); printf("[]");
-        screenGotoxy(SCRENDX - 9, y); printf("[]");
-        screenGotoxy(SCRENDX - 5, y); printf("[]");
+        screenGotoxy(SCRSTARTX + 6, y);
+        printf("[]");
+        screenGotoxy(SCRSTARTX + 10, y);
+        printf("[]");
+        screenGotoxy(SCRENDX - 9, y);
+        printf("[]");
+        screenGotoxy(SCRENDX - 5, y);
+        printf("[]");
     }
 
     // Horizonte
@@ -173,8 +177,10 @@ void drawBackground(void)
 
     // Totens lógicos
     screenSetColor(LIGHTMAGENTA, LIGHTCYAN);
-    screenGotoxy(midX - 12, SCRENDY - 10); printf("[ A v B ]");
-    screenGotoxy(midX + 20, SCRENDY - 10); printf("[ ¬P -> Q ]");
+    screenGotoxy(midX - 12, SCRENDY - 10);
+    printf("[ A v B ]");
+    screenGotoxy(midX + 20, SCRENDY - 10);
+    printf("[ ¬P -> Q ]");
 
     // volta cor padrão
     screenSetColor(WHITE, LIGHTCYAN);
@@ -190,18 +196,24 @@ void drawFighter(const Fighter *f, int topY, int isPlayer)
 
     if (isPlayer)
     {
-        idleLeft  = PLAYER_IDLE_LEFT;
+        idleLeft = PLAYER_IDLE_LEFT;
         idleRight = PLAYER_IDLE_RIGHT;
-        atkLeft   = PLAYER_ATTACK_LEFT;
-        atkRight  = PLAYER_ATTACK_RIGHT;
+        atkLeft = PLAYER_ATTACK_LEFT;
+        atkRight = PLAYER_ATTACK_RIGHT;
         screenSetColor(LIGHTCYAN, LIGHTCYAN);
+
+        extern int playerBuffActive;
+        if (playerBuffActive)
+        {
+            screenSetColor(LIGHTBLUE, LIGHTCYAN);
+        }
     }
     else
     {
-        idleLeft  = BOT_IDLE_LEFT;
+        idleLeft = BOT_IDLE_LEFT;
         idleRight = BOT_IDLE_RIGHT;
-        atkLeft   = BOT_ATTACK_LEFT;
-        atkRight  = BOT_ATTACK_RIGHT;
+        atkLeft = BOT_ATTACK_LEFT;
+        atkRight = BOT_ATTACK_RIGHT;
         screenSetColor(LIGHTRED, LIGHTCYAN);
     }
 
@@ -268,15 +280,15 @@ void drawGame(const Fighter *player,
               int playerWins,
               int cpuWins)
 {
-    clearGameArea();       // limpa só a área de jogo (sem piscar a tela inteira)
+    clearGameArea(); // limpa só a área de jogo (sem piscar a tela inteira)
     drawBackground();
     drawHUD(player, cpu, timeLeft, playerWins, cpuWins);
 
-    int floorY      = SCRENDY - 1;
+    int floorY = SCRENDY - 1;
     int fighterTopY = floorY - 3;
 
     drawFighter(player, fighterTopY, 1);
-    drawFighter(cpu,    fighterTopY, 0);
+    drawFighter(cpu, fighterTopY, 0);
 
     screenUpdate();
 }
@@ -306,9 +318,12 @@ void drawLogicQuizScreen(int timeLeft)
     printf("\"Se chover então eu não vou para a praia\"");
 
     screenSetColor(WHITE, BLACK);
-    screenGotoxy(33, 12); printf("[ 0 ] apenas ->");
-    screenGotoxy(33, 13); printf("[ 1 ] apenas ~");
-    screenGotoxy(33, 14); printf("[ 2 ] -> + ~");
+    screenGotoxy(33, 12);
+    printf("[ 0 ] apenas ->");
+    screenGotoxy(33, 13);
+    printf("[ 1 ] apenas ~");
+    screenGotoxy(33, 14);
+    printf("[ 2 ] -> + ~");
 
     screenUpdate();
 }
@@ -323,31 +338,33 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu)
 
     int result = 0;
 
-    if (player->hp > 0 && cpu->hp <= 0) result = 1;
-    else if (cpu->hp > 0 && player->hp <= 0) result = 2;
+    if (player->hp > 0 && cpu->hp <= 0)
+        result = 1;
+    else if (cpu->hp > 0 && player->hp <= 0)
+        result = 2;
 
     int msgX = MAXX / 2 - 6;
     int msgY = MAXY / 2;
 
     switch (result)
     {
-        case 1:
-            screenSetColor(LIGHTGREEN, LIGHTCYAN);
-            screenGotoxy(msgX, msgY);
-            printf("VOCE VENCEU!");
-            break;
+    case 1:
+        screenSetColor(LIGHTGREEN, LIGHTCYAN);
+        screenGotoxy(msgX, msgY);
+        printf("VOCE VENCEU!");
+        break;
 
-        case 2:
-            screenSetColor(LIGHTRED, LIGHTCYAN);
-            screenGotoxy(msgX, msgY);
-            printf("VOCE PERDEU!");
-            break;
+    case 2:
+        screenSetColor(LIGHTRED, LIGHTCYAN);
+        screenGotoxy(msgX, msgY);
+        printf("VOCE PERDEU!");
+        break;
 
-        default:
-            screenSetColor(YELLOW, LIGHTCYAN);
-            screenGotoxy(msgX, msgY);
-            printf("EMPATE!");
-            break;
+    default:
+        screenSetColor(YELLOW, LIGHTCYAN);
+        screenGotoxy(msgX, msgY);
+        printf("EMPATE!");
+        break;
     }
 
     screenSetColor(WHITE, LIGHTCYAN);
@@ -358,5 +375,6 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu)
 
     int key = 0;
     while (key != 27)
-        if (keyhit()) key = readch();
+        if (keyhit())
+            key = readch();
 }

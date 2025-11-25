@@ -11,6 +11,9 @@
 #include "render.h"
 #include "utils.h"
 
+int playerDamage = DAMAGE;
+int playerBuffActive = 0;
+
 // --- PROTÓTIPOS (internos a este arquivo) ---
 static void resetRound(GameState *game);
 static void playRound(GameState *game);
@@ -28,6 +31,8 @@ void initGame(GameState *game)
     game->playerWins = 0;
     game->cpuWins    = 0;
     game->timeLeft   = ROUND_TIME;
+    
+    playerDamage = DAMAGE;
 }
 
 // -----------------------------------------------------------------------------
@@ -70,8 +75,8 @@ static void playRound(GameState *game)
             updateCPU(&game->cpu, &game->player);
 
             // ataques (aplicam dano e atualizam timers)
-            updateAttack(&game->player, &game->cpu);
-            updateAttack(&game->cpu,    &game->player);
+            updateAttack(&game->player, &game->cpu, playerDamage);
+            updateAttack(&game->cpu,    &game->player, DAMAGE);
 
             // conta frames para transformar em segundos de round
             frameCounter++;
@@ -121,7 +126,13 @@ void runFight(void)
         // entre os rounds (exceto depois do último), roda o quiz
         if (game.cpuWins == 1 && game.playerWins == 0)
         {
-            runLogicQuiz();
+            int acertou = runLogicQuiz();
+
+            if(acertou){
+                playerDamage = 15;
+                playerBuffActive = 1;
+            }
+
         }
     }
 

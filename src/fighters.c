@@ -36,7 +36,7 @@ void startAttack(Fighter *f)
 // Atualização do ataque (diminui timer + aplica dano no 1º frame)
 // -----------------------------------------------------------------------------
 
-void updateAttack(Fighter *attacker, Fighter *defender)
+void updateAttack(Fighter *attacker, Fighter *defender, int damage)
 {
     if (!attacker->attacking) return;
 
@@ -45,7 +45,7 @@ void updateAttack(Fighter *attacker, Fighter *defender)
     {
         if (abs(attacker->x - defender->x) <= ATTACK_RANGE)
         {
-            defender->hp -= DAMAGE;
+            defender->hp -= damage;
         }
     }
 

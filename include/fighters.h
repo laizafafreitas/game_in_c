@@ -26,7 +26,7 @@ typedef struct {
 // API pública
 void initFighter(Fighter *f, int startX, Facing facing);
 void startAttack(Fighter *f);
-void updateAttack(Fighter *attacker, Fighter *defender);
+void updateAttack(Fighter *attacker, Fighter *defender, int damage);
 void handlePlayerInput(int *running, Fighter *player);
 void updateCPU(Fighter *cpu, Fighter *player);
 
