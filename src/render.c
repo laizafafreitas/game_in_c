@@ -380,7 +380,7 @@ void drawLogicQuizScreen(int timeLeft, int questionId)
     case 0:
         drawCentered(questionY, "Quais conectivos logicos estao presentes na frase?");
         screenSetColor(YELLOW, LIGHTCYAN);
-        drawCentered(questionY + 2, "\"Se chover entao eu nao vou para a praia\"");
+        drawCentered(questionY + 2, "\"Se chover então eu não vou para a praia\"");
         screenSetColor(WHITE, LIGHTCYAN);
         drawCentered(questionY + 4, "[ 0 ] apenas ->");
         drawCentered(questionY + 5, "[ 1 ] apenas ~");
@@ -390,7 +390,7 @@ void drawLogicQuizScreen(int timeLeft, int questionId)
     case 1:
         drawCentered(questionY, "Qual conectivo aparece na frase abaixo?");
         screenSetColor(YELLOW, LIGHTCYAN);
-        drawCentered(questionY + 2, "\"Hoje e sabado e esta chovendo\"");
+        drawCentered(questionY + 2, "\"Hoje é sabado e está chovendo\"");
         screenSetColor(WHITE, LIGHTCYAN);
         drawCentered(questionY + 4, "[ 0 ] apenas v");
         drawCentered(questionY + 5, "[ 1 ] apenas ^");
@@ -400,7 +400,7 @@ void drawLogicQuizScreen(int timeLeft, int questionId)
     case 2:
         drawCentered(questionY, "Qual conectivo representa a ideia da frase?");
         screenSetColor(YELLOW, LIGHTCYAN);
-        drawCentered(questionY + 2, "\"Ou estudo logica ou reprovo na disciplina\"");
+        drawCentered(questionY + 2, "\"Ou estudo lógica ou reprovo na disciplina\"");
         screenSetColor(WHITE, LIGHTCYAN);
         drawCentered(questionY + 4, "[ 0 ] v");
         drawCentered(questionY + 5, "[ 1 ] ->");
@@ -408,9 +408,9 @@ void drawLogicQuizScreen(int timeLeft, int questionId)
         break;
 
     case 3:
-        drawCentered(questionY, "A negacao de P e representada por:");
+        drawCentered(questionY, "A negação de P é representada por:");
         screenSetColor(YELLOW, LIGHTCYAN);
-        drawCentered(questionY + 2, "\"Nao P\"");
+        drawCentered(questionY + 2, "\"Não P\"");
         screenSetColor(WHITE, LIGHTCYAN);
         drawCentered(questionY + 4, "[ 0 ] ~P");
         drawCentered(questionY + 5, "[ 1 ] P -> Q");
@@ -431,7 +431,7 @@ void drawLogicQuizScreen(int timeLeft, int questionId)
     default:
         drawCentered(questionY, "Qual conectivo aparece na frase abaixo?");
         screenSetColor(YELLOW, LIGHTCYAN);
-        drawCentered(questionY + 2, "\"Se eu passar no concurso, entao vou viajar\"");
+        drawCentered(questionY + 2, "\"Se eu passar no concurso, então vou viajar\"");
         screenSetColor(WHITE, LIGHTCYAN);
         drawCentered(questionY + 4, "[ 0 ] ~");
         drawCentered(questionY + 5, "[ 1 ] ->");
