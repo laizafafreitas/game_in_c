@@ -75,7 +75,8 @@ static void resetRound(GameState *game)
 // Lê um input e aplica em P1 ou P2 (modo multiplayer)
 static void handleBothPlayersInput(GameState *game, int *running)
 {
-    if (!keyhit()) return;
+    if (!keyhit())
+        return;
 
     int k = readch();
 
@@ -83,51 +84,52 @@ static void handleBothPlayersInput(GameState *game, int *running)
     Fighter *p2 = &game->cpu;
 
     // Mesma tecla pra sair
-    if (k == 'q' || k == 'Q') {
+    if (k == 'q' || k == 'Q')
+    {
         *running = 0;
         return;
     }
 
     switch (k)
     {
-        // ---- CONTROLES PLAYER 1 ----
-        case 'a':
-        case 'A':
-            p1->x--;
-            p1->facing = FACING_LEFT;
-            break;
+    // ---- CONTROLES PLAYER 1 ----
+    case 'a':
+    case 'A':
+        p1->x--;
+        p1->facing = FACING_LEFT;
+        break;
 
-        case 'd':
-        case 'D':
-            p1->x++;
-            p1->facing = FACING_RIGHT;
-            break;
+    case 'd':
+    case 'D':
+        p1->x++;
+        p1->facing = FACING_RIGHT;
+        break;
 
-        case 'f':
-        case 'F':
-            startAttack(p1);
-            break;
+    case 'f':
+    case 'F':
+        startAttack(p1);
+        break;
 
-        // ---- CONTROLES PLAYER 2 ----
-        case 'j':
-        case 'J':
-            p2->x--;
-            p2->facing = FACING_LEFT;
-            break;
+    // ---- CONTROLES PLAYER 2 ----
+    case 'j':
+    case 'J':
+        p2->x--;
+        p2->facing = FACING_LEFT;
+        break;
 
-        case 'k':
-        case 'K':
-            p2->x++;
-            p2->facing = FACING_RIGHT;
-            break;
+    case 'k':
+    case 'K':
+        p2->x++;
+        p2->facing = FACING_RIGHT;
+        break;
 
-        case 'p':
-        case 'P':
-            startAttack(p2);
-            break;
+    case 'p':
+    case 'P':
+        startAttack(p2);
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
     // Garante que ninguém saia da arena
@@ -140,13 +142,13 @@ static void handleBothPlayersInput(GameState *game, int *running)
 // -----------------------------------------------------------------------------
 static void playRound(GameState *game, GameMode mode)
 {
-    int running      = 1;
+    int running = 1;
     int frameCounter = 0;
 
     while (running &&
            game->player.hp > 0 &&
-           game->cpu.hp    > 0 &&
-           game->timeLeft  > 0)
+           game->cpu.hp > 0 &&
+           game->timeLeft > 0)
     {
         // INPUT
         if (mode == MODE_VS_CPU)
@@ -174,7 +176,7 @@ static void playRound(GameState *game, GameMode mode)
 
             // ataques (funcionam igual pros dois modos)
             updateAttack(&game->player, &game->cpu, playerDamage);
-            updateAttack(&game->cpu,    &game->player, DAMAGE);
+            updateAttack(&game->cpu, &game->player, DAMAGE);
 
             // FPS → decrementa timer do round
             frameCounter++;
@@ -182,6 +184,17 @@ static void playRound(GameState *game, GameMode mode)
             {
                 game->timeLeft--;
                 frameCounter = 0;
+            }
+            // --- SEMPRE OLHAR UM PRO OUTRO ---
+            if (game->player.x < game->cpu.x)
+            {
+                game->player.facing = FACING_RIGHT;
+                game->cpu.facing = FACING_LEFT;
+            }
+            else if (game->player.x > game->cpu.x)
+            {
+                game->player.facing = FACING_LEFT;
+                game->cpu.facing = FACING_RIGHT;
             }
 
             // desenha tudo
@@ -380,11 +393,11 @@ void runFight(GameMode mode)
             // Se alguém ganhou o round e o outro perdeu (1 x 0),
             // mostra o quiz para o jogador que perdeu (na prática,
             // vcs combinam quem responde, já que dividem o teclado).
-            if (game.round < MAX_ROUNDS &&   // ainda vai ter próximo round
+            if (game.round < MAX_ROUNDS && // ainda vai ter próximo round
                 ((game.playerWins == 1 && game.cpuWins == 0) ||
                  (game.cpuWins == 1 && game.playerWins == 0)))
             {
-                runLogicQuiz();   // só educativo, sem buff por enquanto
+                runLogicQuiz(); // só educativo, sem buff por enquanto
 
                 soundStopMusic();
                 soundPlayFightMusic();
@@ -440,5 +453,6 @@ void runFight(GameMode mode)
 
     // libera memória
     free(player1Name);
-    if (player2Name) free(player2Name);
+    if (player2Name)
+        free(player2Name);
 }
