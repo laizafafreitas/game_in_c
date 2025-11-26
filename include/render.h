@@ -4,6 +4,7 @@
 #include "fighters.h"
 #include "game.h"
 
+void drawBackground(void);
 void drawFloor(void);
 void drawFighter(const Fighter *f, int y, int isPlayer);
 void drawTimer(int x, int y, int timeLeft);
@@ -32,4 +33,5 @@ void drawScoreScreen(GameMode mode,
                      int hpTotalFinal,
                      int roundsPlayed,
                      const int roundResults[]);
+
 #endif

@@ -8,6 +8,7 @@
 #include "render.h"
 #include "config.h"
 #include "sound.h"
+#include "utils.h"
 
 
 extern int playerBuffActive;
@@ -69,15 +70,6 @@ static void drawSprite(int x, int topY, const char *sprite[3])
         screenGotoxy(x, topY + i);
         printf("%s", sprite[i]);
     }
-}
-
-static void drawCentered(int y, const char *text)
-{
-    int centerX = (SCRSTARTX + SCRENDX) / 2;
-    int len = (int)strlen(text);
-    int x = centerX - len / 2;
-    screenGotoxy(x, y);
-    printf("%s", text);
 }
 
 

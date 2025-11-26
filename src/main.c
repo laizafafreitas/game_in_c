@@ -7,11 +7,11 @@
 #include "lib/timer.h"
 
 #include "config.h"
+#include "screens/story.h"
 #include "screens/game.h"      // runFight()
 #include "screens/menu.h"      // runMenu()
 #include "screens/tutorial.h"  // runTutorial()
 #include "sound.h"
-// se tiver um modo Vs Player depois, você pode incluir outro header
 
 int main(void) {
     srand((unsigned) time(NULL));
@@ -19,6 +19,9 @@ int main(void) {
     screenInit(1);
     keyboardInit();
     timerInit(1000 / FPS);
+
+    // === NOVO: tela de historinha antes dos modos ===
+    showStoryScreen();
 
     int running = 1;
 
@@ -50,8 +53,8 @@ int main(void) {
                 break;
         }
     }
-    soundStopMusic();
 
+    soundStopMusic();
     keyboardDestroy();
     screenDestroy();
     timerDestroy();
