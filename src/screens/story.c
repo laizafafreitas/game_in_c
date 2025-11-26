@@ -18,9 +18,22 @@ static void centerText(int y, const char *text)
     printf("%s", text);
 }
 
+
+
+
+
 void showStoryScreen(void)
 {
     clearGameArea();
+
+    screenGotoxy(24, 2);
+    screenSetBold();
+    printf("╔══════════════════════════════╗");
+    screenGotoxy(24, 3);
+    printf("║        LOGIC FIGHTERS        ║");
+    screenGotoxy(24, 4);
+    printf("╚══════════════════════════════╝");
+    screenSetNormal();
 
     screenSetColor(WHITE, LIGHTCYAN);
 
