@@ -213,7 +213,7 @@ make
 ```
 2. Executar
 ```go
-make
+make run
 ```
 3. Limpar Arquivos
 ```go
