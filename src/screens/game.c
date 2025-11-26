@@ -19,7 +19,7 @@
 #define SCORE_TIME_PENALTY 2 // pontos perdidos por 1 segundo de luta
 
 static int calculateScore(const GameState *game);
-static char *askPlayerName(void);
+static char *askPlayerName(const char *title, const char *label);
 
 int playerDamage = DAMAGE;
 int playerBuffActive = 0;
@@ -255,7 +255,7 @@ static int calculateScore(const GameState *game)
 // -----------------------------------------------------------------------------
 // Ler o nome do jogador com alocação dinâmica
 // -----------------------------------------------------------------------------
-static char *askPlayerName(void)
+static char *askPlayerName(const char *title, const char *label)
 {
     clearGameArea();
     screenSetColor(WHITE, LIGHTCYAN);
@@ -263,11 +263,13 @@ static char *askPlayerName(void)
     int midX = (SCRSTARTX + SCRENDX) / 2 - 10;
     int midY = (SCRSTARTY + SCRENDY) / 2;
 
+    // linha de título (ex: "Partida encerrada!" ou "Modo Multiplayer")
     screenGotoxy(midX, midY - 1);
-    printf("Partida encerrada!");
+    printf("%s", title ? title : "Partida encerrada!");
 
+    // linha de instrução (ex: "Digite seu nome:" / "Nome do Jogador 1:")
     screenGotoxy(midX, midY + 0);
-    printf("Digite seu nome:");
+    printf("%s", label ? label : "Digite seu nome:");
 
     screenSetColor(YELLOW, LIGHTCYAN);
 
@@ -373,7 +375,22 @@ void runFight(GameMode mode)
     drawEndScreen(&game.player, &game.cpu);
 
     int finalScore = calculateScore(&game);
-    char *playerName = askPlayerName();
+
+    // --- LER NOMES DOS JOGADORES ---
+    char *player1Name = NULL;
+    char *player2Name = NULL;
+
+    if (mode == MODE_VS_CPU)
+    {
+        // só pergunta o nome do player humano
+        player1Name = askPlayerName("Partida encerrada!", "Digite seu nome:");
+    }
+    else
+    {
+        // modo multiplayer → pergunta nome dos dois
+        player1Name = askPlayerName("Partida encerrada!", "Nome do Jogador 1:");
+        player2Name = askPlayerName("Partida encerrada!", "Nome do Jogador 2:");
+    }
 
     // vida máxima possível e vida "mantida"
     int maxHpTotal = MAX_HP * game.roundsPlayed;
@@ -387,13 +404,19 @@ void runFight(GameMode mode)
     soundStopMusic();
     soundPlayScoreMusic();
 
-    drawScoreScreen(finalScore,
-                    playerName,
+    // NOVA ASSINATURA DO SCORE:
+    // drawScoreScreen(GameMode mode, int score, const char *player1Name, const char *player2Name, ...)
+    drawScoreScreen(mode,
+                    finalScore,
+                    player1Name,
+                    player2Name,
                     playerWonMatch,
                     maxHpTotal,
                     hpTotalFinal,
                     game.roundsPlayed,
                     game.roundResult);
 
-    free(playerName);
+    // libera memória
+    free(player1Name);
+    if (player2Name) free(player2Name);
 }

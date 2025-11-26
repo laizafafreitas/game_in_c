@@ -23,8 +23,10 @@ void drawGame(const Fighter *player,
 void drawEndScreen(const Fighter *player, const Fighter *cpu);
 void drawLogicQuizScreen(int timeLeft, int questionId);
 void drawQuizResultScreen(int acertou, int questionId);
-void drawScoreScreen(int score,
-                     const char *playerName,
+void drawScoreScreen(GameMode mode,
+                     int score,
+                     const char *player1Name,
+                     const char *player2Name,
                      int playerWonMatch,
                      int maxHpTotal,
                      int hpTotalFinal,

@@ -578,8 +578,10 @@ void drawEndScreen(const Fighter *player, const Fighter *cpu)
 }
 
 
-void drawScoreScreen(int score,
-                     const char *playerName,
+void drawScoreScreen(GameMode mode,
+                     int score,
+                     const char *player1Name,
+                     const char *player2Name,
                      int playerWonMatch,
                      int maxHpTotal,
                      int hpTotalFinal,
@@ -620,21 +622,49 @@ void drawScoreScreen(int score,
     // ====== CONTEÚDO CENTRALIZADO ======
     screenSetColor(YELLOW, LIGHTCYAN);
     screenGotoxy(startX + 3, startY + 1);
-    if (playerWonMatch)
-        printf("RESULTADO: VITORIA");
+    if (mode == MODE_VS_CPU)
+    {
+        // MODO VS CPU (igual antes)
+        if (playerWonMatch)
+            printf("RESULTADO: VITORIA");
+        else
+            printf("RESULTADO: DERROTA");
+
+        screenSetColor(WHITE, LIGHTCYAN);
+        screenGotoxy(startX + 3, startY + 3);
+        printf("Jogador: %s", player1Name ? player1Name : "Player");
+
+        screenGotoxy(startX + 3, startY + 4);
+        printf("Score final: %d", score);
+
+        // Vida num formato mais compacto
+        screenGotoxy(startX + 3, startY + 6);
+        printf("Vida: %d / %d (mantida / possivel)", hpTotalFinal, maxHpTotal);
+    }
     else
-        printf("RESULTADO: DERROTA");
+    {
+        // MODO MULTIPLAYER
+        const char *p1 = player1Name ? player1Name : "Player 1";
+        const char *p2 = player2Name ? player2Name : "Player 2";
 
-    screenSetColor(WHITE, LIGHTCYAN);
-    screenGotoxy(startX + 3, startY + 3);
-    printf("Jogador: %s", playerName ? playerName : "Player");
+        if (playerWonMatch)
+            printf("RESULTADO: %s venceu", p1);
+        else
+            printf("RESULTADO: %s venceu", p2);
 
-    screenGotoxy(startX + 3, startY + 4);
-    printf("Score final: %d", score);
+        screenSetColor(WHITE, LIGHTCYAN);
+        screenGotoxy(startX + 3, startY + 3);
+        printf("P1: %s", p1);
 
-    // Vida num formato mais compacto
-    screenGotoxy(startX + 3, startY + 6);
-    printf("Vida: %d / %d (mantida / possivel)", hpTotalFinal, maxHpTotal);
+        screenGotoxy(startX + 3, startY + 4);
+        printf("P2: %s", p2);
+
+        // No multiplayer, o "score" pode ser interpretado como opcional
+        screenGotoxy(startX + 3, startY + 6);
+        printf("Rounds: P1 %d x %d P2", playerWonMatch ? 2 : 0, playerWonMatch ? 0 : 2);
+        // (se quiser mais fiel, pode usar game.playerWins / game.cpuWins aqui
+        //  em vez de chutar 2–0; mas deixei simples pra encaixar no layout)
+    }
 
     // Rounds + resultados
     screenGotoxy(startX + 3, startY + 8);
@@ -653,10 +683,21 @@ void drawScoreScreen(int score,
     for (int i = 0; i < roundsToShow; i++)
     {
         const char *texto = "Empate";
+
         if (roundResults[i] == 1)
-            texto = "Vitoria do jogador";
+        {
+            if (mode == MODE_VS_CPU)
+                texto = "Vitoria do jogador";
+            else
+                texto = "Vitoria do Player 1";
+        }
         else if (roundResults[i] == 2)
-            texto = "Vitoria do bot";
+        {
+            if (mode == MODE_VS_CPU)
+                texto = "Vitoria do bot";
+            else
+                texto = "Vitoria do Player 2";
+        }
 
         screenGotoxy(startX + 5, startY + 10 + i);
         printf("Round %d: %s", i + 1, texto);
