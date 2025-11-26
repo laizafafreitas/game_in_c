@@ -26,6 +26,7 @@ void showStoryScreen(void)
 {
     clearGameArea();
 
+    screenSetColor(LIGHTCYAN, LIGHTCYAN);
     screenGotoxy(24, 2);
     screenSetBold();
     printf("╔══════════════════════════════╗");
