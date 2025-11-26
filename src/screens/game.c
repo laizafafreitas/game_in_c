@@ -26,7 +26,8 @@ int playerBuffActive = 0;
 
 // --- PROTÓTIPOS (internos a este arquivo) ---
 static void resetRound(GameState *game);
-static void playRound(GameState *game);
+static void playRound(GameState *game, GameMode mode);
+static void handleBothPlayersInput(GameState *game, int *running);
 
 // -----------------------------------------------------------------------------
 // Inicializa o estado base do jogo (lutadores e contadores de round/vitórias)
@@ -69,47 +70,113 @@ static void resetRound(GameState *game)
 }
 
 // -----------------------------------------------------------------------------
+// Função auxiliar para ler input dos DOIS players
+// -----------------------------------------------------------------------------
+// Lê um input e aplica em P1 ou P2 (modo multiplayer)
+static void handleBothPlayersInput(GameState *game, int *running)
+{
+    if (!keyhit()) return;
+
+    int k = readch();
+
+    Fighter *p1 = &game->player;
+    Fighter *p2 = &game->cpu;
+
+    // Mesma tecla pra sair
+    if (k == 'q' || k == 'Q') {
+        *running = 0;
+        return;
+    }
+
+    switch (k)
+    {
+        // ---- CONTROLES PLAYER 1 ----
+        case 'a':
+        case 'A':
+            p1->x--;
+            p1->facing = FACING_LEFT;
+            break;
+
+        case 'd':
+        case 'D':
+            p1->x++;
+            p1->facing = FACING_RIGHT;
+            break;
+
+        case 'f':
+        case 'F':
+            startAttack(p1);
+            break;
+
+        // ---- CONTROLES PLAYER 2 ----
+        case 'j':
+        case 'J':
+            p2->x--;
+            p2->facing = FACING_LEFT;
+            break;
+
+        case 'k':
+        case 'K':
+            p2->x++;
+            p2->facing = FACING_RIGHT;
+            break;
+
+        case 'p':
+        case 'P':
+            startAttack(p2);
+            break;
+
+        default:
+            break;
+    }
+
+    // Garante que ninguém saia da arena
+    p1->x = clamp(p1->x, SCRSTARTX + 1, SCRENDX - 1);
+    p2->x = clamp(p2->x, SCRSTARTX + 1, SCRENDX - 1);
+}
+
+// -----------------------------------------------------------------------------
 // Loop principal de UM round de luta
 // -----------------------------------------------------------------------------
-static void playRound(GameState *game)
+static void playRound(GameState *game, GameMode mode)
 {
-    int running = 1;
-    int frameCounter = 0; // conta quantos frames já passaram (pra virar segundos)
+    int running      = 1;
+    int frameCounter = 0;
 
     while (running &&
            game->player.hp > 0 &&
-           game->cpu.hp > 0 &&
-           game->timeLeft > 0)
+           game->cpu.hp    > 0 &&
+           game->timeLeft  > 0)
     {
-        // INPUT (sempre pode ler input)
-        handlePlayerInput(&running, &game->player, &game->cpu);
+        // INPUT
+        if (mode == MODE_VS_CPU)
+        {
+            // Só P1 é humano, P2 é CPU
+            handlePlayerInput(&running, &game->player, &game->cpu);
 
-        // limita posição do player dentro da arena
-        game->player.x = clamp(game->player.x, SCRSTARTX + 1, SCRENDX - 1);
+            // Limita só o player 1 aqui
+            game->player.x = clamp(game->player.x, SCRSTARTX + 1, SCRENDX - 1);
+        }
+        else
+        {
+            // Dois jogadores humanos no mesmo teclado
+            handleBothPlayersInput(game, &running);
+        }
 
-        // UPDATE + RENDER só quando o timer "vira" (≈ 1 / FPS segundos)
+        // UPDATE + RENDER
         if (timerTimeOver())
         {
-            // lógica da CPU
-            updateCPU(&game->cpu, &game->player);
-
-            // sempre olhar para o outro:
-            if (game->player.x < game->cpu.x)
+            // Só usa IA se for vs CPU
+            if (mode == MODE_VS_CPU)
             {
-                game->player.facing = 1; // olhando pra direita
-                game->cpu.facing = -1;   // olhando pra esquerda
-            }
-            else
-            {
-                game->player.facing = -1;
-                game->cpu.facing = 1;
+                updateCPU(&game->cpu, &game->player);
             }
 
-            // ataques (aplicam dano e atualizam timers)
+            // ataques (funcionam igual pros dois modos)
             updateAttack(&game->player, &game->cpu, playerDamage);
-            updateAttack(&game->cpu, &game->player, DAMAGE);
+            updateAttack(&game->cpu,    &game->player, DAMAGE);
 
-            // conta frames para transformar em segundos de round
+            // FPS → decrementa timer do round
             frameCounter++;
             if (frameCounter >= FPS)
             {
@@ -117,12 +184,13 @@ static void playRound(GameState *game)
                 frameCounter = 0;
             }
 
-            // RENDER (arena + HUD + lutadores)
+            // desenha tudo
             drawGame(&game->player,
                      &game->cpu,
                      game->timeLeft,
                      game->playerWins,
-                     game->cpuWins);
+                     game->cpuWins,
+                     mode);
         }
     }
 
@@ -267,7 +335,7 @@ static char *askPlayerName(void)
 // -----------------------------------------------------------------------------
 // Função chamada pelo main: controla a sequência de rounds + quiz + tela final
 // -----------------------------------------------------------------------------
-void runFight(void)
+void runFight(GameMode mode)
 {
     soundStopMusic();
     soundPlayFightMusic();
@@ -280,7 +348,7 @@ void runFight(void)
          game.round++)
     {
         resetRound(&game);
-        playRound(&game);
+        playRound(&game, mode);
 
         game.roundsPlayed++;
 

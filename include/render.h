@@ -2,6 +2,7 @@
 #define RENDER_H
 
 #include "fighters.h"
+#include "game.h"
 
 void drawFloor(void);
 void drawFighter(const Fighter *f, int y, int isPlayer);
@@ -11,12 +12,14 @@ void drawHUD(const Fighter *player,
              const Fighter *cpu,
              int timeLeft,
              int playerWins,
-             int cpuWins);
+             int cpuWins,
+             GameMode mode);
 void drawGame(const Fighter *player,
               const Fighter *cpu,
               int timeLeft,
               int playerWins,
-              int cpuWins);
+              int cpuWins,
+              GameMode mode);
 void drawEndScreen(const Fighter *player, const Fighter *cpu);
 void drawLogicQuizScreen(int timeLeft, int questionId);
 void drawQuizResultScreen(int acertou, int questionId);

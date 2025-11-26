@@ -28,10 +28,12 @@ int main(void) {
         switch (choice) {
             case 1:
                 clearGameArea();
-                runFight();       
+                runFight(MODE_VS_CPU);      
                 break;
 
             case 2:
+                clearGameArea();
+                runFight(MODE_VS_PLAYER);
                 break;
 
             case 3:
