@@ -225,7 +225,7 @@ make clean
 
 ---
 ## 👥 9. Equipe
-Projeto desenvolvido pelos estudantes da **Cesar School**, em parceria com a **NTT DATA**:
+Projeto desenvolvido pelos estudantes da **Cesar School**:
 
 - **Marcello Augusto - Líder** · [LinkedIn](https://www.linkedin.com/in/marcelloaugustosv/)
 - **Luiza Vieira** · [LinkedIn](https://www.linkedin.com/in/vbluuiza)
