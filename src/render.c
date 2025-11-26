@@ -661,7 +661,7 @@ void drawScoreScreen(GameMode mode,
 
         // No multiplayer, o "score" pode ser interpretado como opcional
         screenGotoxy(startX + 3, startY + 6);
-        printf("Rounds: P1 %d x %d P2", playerWonMatch ? 2 : 0, playerWonMatch ? 0 : 2);
+        printf("Rounds: %s %d x %d %s", p1, playerWonMatch ? 2 : 0, playerWonMatch ? 0 : 2, p2);
         // (se quiser mais fiel, pode usar game.playerWins / game.cpuWins aqui
         //  em vez de chutar 2–0; mas deixei simples pra encaixar no layout)
     }

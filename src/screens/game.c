@@ -354,18 +354,41 @@ void runFight(GameMode mode)
 
         game.roundsPlayed++;
 
-        // quiz entre os rounds
-        if (game.cpuWins == 1 && game.playerWins == 0)
+        // ===========================
+        // QUIZ ENTRE ROUNDS
+        // ===========================
+        if (mode == MODE_VS_CPU)
         {
-            int acertou = runLogicQuiz();
-
-            if (acertou)
+            // LÓGICA ANTIGA: só quando o bot ganha o 1º round
+            if (game.cpuWins == 1 && game.playerWins == 0)
             {
-                playerDamage = 15;
-                playerBuffActive = 1;
+                int acertou = runLogicQuiz();
+
+                if (acertou)
+                {
+                    // buff só pro player contra CPU
+                    playerDamage = 15;
+                    playerBuffActive = 1;
+                }
+
+                soundStopMusic();
+                soundPlayFightMusic();
             }
-            soundStopMusic();
-            soundPlayFightMusic();
+        }
+        else // MODE_MULTIPLAYER
+        {
+            // Se alguém ganhou o round e o outro perdeu (1 x 0),
+            // mostra o quiz para o jogador que perdeu (na prática,
+            // vcs combinam quem responde, já que dividem o teclado).
+            if (game.round < MAX_ROUNDS &&   // ainda vai ter próximo round
+                ((game.playerWins == 1 && game.cpuWins == 0) ||
+                 (game.cpuWins == 1 && game.playerWins == 0)))
+            {
+                runLogicQuiz();   // só educativo, sem buff por enquanto
+
+                soundStopMusic();
+                soundPlayFightMusic();
+            }
         }
     }
 
@@ -404,7 +427,6 @@ void runFight(GameMode mode)
     soundStopMusic();
     soundPlayScoreMusic();
 
-    // NOVA ASSINATURA DO SCORE:
     // drawScoreScreen(GameMode mode, int score, const char *player1Name, const char *player2Name, ...)
     drawScoreScreen(mode,
                     finalScore,
