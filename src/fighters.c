@@ -112,7 +112,7 @@ void handlePlayerInput(int *running, Fighter *player, Fighter *cpu)
         } 
     }
     // atacar
-    else if (k == 'j' || k == 'J')
+    else if (k == 'f' || k == 'F')
     {
         startAttack(player);
         player->defending = 0;

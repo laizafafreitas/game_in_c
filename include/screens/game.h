@@ -3,6 +3,10 @@
 
 #include "fighters.h"
 #include "config.h"
+typedef enum {
+    MODE_VS_CPU,
+    MODE_VS_PLAYER
+} GameMode;
 
 typedef struct {
     Fighter player;
@@ -15,12 +19,12 @@ typedef struct {
 
     int totalTimeSeconds;   // acumula tempo gasto em todos os rounds
     int totalHpLost;        // soma de vida perdida em cada round
-    int roundsPlayed;       // quantos rounds foram jogados
 
-    int roundResult[MAX_ROUNDS]; // 1 = player, 2 = cpu, 0 = empate
+    int roundsPlayed;       // quantos rounds realmente rolaram
+    int roundResult[MAX_ROUNDS]; // 0 = empate, 1 = player, 2 = cpu/p2
 } GameState;
 
 void initGame(GameState *game);
-void runFight(void);
+void runFight(GameMode mode);
 
 #endif

@@ -247,7 +247,8 @@ void drawHUD(const Fighter *player,
              const Fighter *cpu,
              int timeLeft,
              int playerWins,
-             int cpuWins)
+             int cpuWins,
+            GameMode mode)
 {
     screenSetColor(GREEN, LIGHTCYAN);
     drawHealthBar(SCRSTARTX + 1, SCRSTARTY + 2, player->hp);
@@ -278,7 +279,17 @@ void drawHUD(const Fighter *player,
 
     screenSetColor(LIGHTBLUE, LIGHTCYAN);
     screenGotoxy(SCRSTARTX + 1, SCRENDY);
-    printf("[A/D] mover  [J] atacar  [Q] sair");
+
+    if (mode == MODE_VS_CPU)
+    {
+        // Só comandos do P1 + sair
+        printf("[P1] A/D mover, F atacar  |  [Q] sair");
+    }
+    else
+    {
+        // Multiplayer: mostra os dois
+        printf("[P1] A/D mover, F atacar  |  [P2] J/K mover, P atacar  |  [Q] sair");
+    }
 
     screenSetColor(WHITE, LIGHTCYAN);
 }
@@ -291,11 +302,12 @@ void drawGame(const Fighter *player,
               const Fighter *cpu,
               int timeLeft,
               int playerWins,
-              int cpuWins)
+              int cpuWins,
+            GameMode mode)
 {
     clearGameArea(); // limpa só a área de jogo (sem piscar a tela inteira)
     drawBackground();
-    drawHUD(player, cpu, timeLeft, playerWins, cpuWins);
+    drawHUD(player, cpu, timeLeft, playerWins, cpuWins, mode);
 
     int floorY = SCRENDY - 1;
     int fighterTopY = floorY - 3;
